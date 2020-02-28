@@ -1,20 +1,21 @@
 ---
 layout: post
-title:  "The secret about hidden software costs"
-date:   2020-02-05 17:36:56 +0100
+title:  "Ceci est un post bidon pour la pagination"
+date:   2020-02-28 20:45:00 +0100
 categories: blog
-tags: [Export Opinions, GPAC Licensing, Technology]
-author: Romain Bouqueau
+tags: [Expert Opinions, Autre Catégorie]
+author: Rodolphe Fouquet
+excerpt_separator: <!--more-->
 ---
 *An essay on how to keep your development projects under control*
 
+<!--more-->
 # Introduction
 
 
 **I’d like to share a secret with you**: there is nothing like a custom software suited to \*your\* need.
 
 At first it may seem a paradox considering our company licenses its software. Moreover we have heavily pushed toward the use of frameworks such as [Signals](https://www.gpac-licensing.com/signals) or [Filters](https://github.com/gpac/gpac/wiki/Filters). Frameworks are marketed as the paragon of reusable components. I will show you why it is not and where to draw the line.
-
 # The acceptance and use of third-party software
 
 

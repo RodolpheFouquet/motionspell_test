@@ -4,8 +4,6 @@
 ---
 
 
-@import "typography";
-
 .blog_post { margin: 50px }
 
 .post_content > p {
@@ -15,3 +13,43 @@
     color: teal;
     font-size: 2em;
 }
+
+.tags {
+    margin: 10px 5px;
+}
+
+.post_title {
+    color: teal;
+    font-size: 2.5em;
+}
+
+.blog_title {
+    color: teal;
+    font-size: 2em;
+    margin: 10px 5px;
+}
+
+.post_title_preview {
+    color: teal;
+    font-size: 1.5em;
+    margin: 10px 5px;
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+html, body{ height:100%; margin:0; }
+footer{ height:50px; }
+
+/* Trick */
+body{ 
+  display:flex; 
+  flex-direction:column; 
+}
+
+footer{
+  margin-top:auto; 
+}
+ 
