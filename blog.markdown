@@ -4,4 +4,10 @@
 
 layout: home
 ---
-Ceci est la page d'accueil de GPAC yeah
+<ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
