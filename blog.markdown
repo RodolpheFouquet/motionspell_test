@@ -4,6 +4,8 @@
 
 layout: home
 ---
+<h1>Blog</h1>
+<div class="container">
 <ul>
   {% for post in site.posts %}
     <li>
@@ -11,3 +13,4 @@ layout: home
     </li>
   {% endfor %}
 </ul>
+</div>

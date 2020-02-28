@@ -6,3 +6,12 @@
 
 @import "typography";
 
+.blog_post { margin: 50px }
+
+.post_content > p {
+    margin: 20px; 
+}
+.post_content > h1 {
+    color: teal;
+    font-size: 2em;
+}
