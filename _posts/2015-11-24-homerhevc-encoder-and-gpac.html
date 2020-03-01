@@ -1,0 +1,66 @@
+---
+layout: post
+status: publish
+published: true
+title: HomerHEVC encoder and GPAC
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 1991
+wordpress_url: http://www.gpac-licensing.com/?p=1991
+date: '2015-11-24 13:30:19 +0100'
+date_gmt: '2015-11-24 13:30:19 +0100'
+categories:
+- GPAC industry use-cases
+- Invited article
+tags: []
+comments: []
+---
+<h1 class="entry-title">HomerHEVC&nbsp;encoder and GPAC</h1>
+<p><strong>This is an invited article from <a href="http://homerhevc.com/">Juan Casal of HomerHEVC</a>. This article belongs the "GPAC industry use-cases" category which shows how industry actors use GPAC in their projects. Please click here to read the <a href="http://homerhevc.com/blog/homerhevc-and-gpac/">original version of this article</a>.</strong></p>
+<hr />
+<div class="entry-content">
+<h2>Creating HEVC videos in .mp4 and .ts format using HomerHEVC and GPAC</h2>
+<p>by <a href="mailto:jcasal@homerhevc.com">jcasal@homerhevc.com</a></p>
+<p>This tutorial aims at showing how to combine HomerHEVC and GPAC to create HEVC content that should be valid for any player that supports HEVC decoding.</p>
+<p><a href="http://www.homerhevc.com/" target="_blank"><strong>HomerHEVC</strong></a> is an open-source H.265-HEVC real time video encoder published under the LGPL license. Further Infomation about the HomerHEVC encoder can be found in&nbsp;<a href="http://www.homerhevc.com">www.homerhevc.com</a>.</p>
+<p><strong><a href="https://gpac.wp.mines-telecom.fr/" target="_blank">GPAC</a></strong> is an open-source&nbsp;multimedia framework used for research and academic purposes and beyond through industrial collaborations. Further information about GPAC can be found in&nbsp;<a href="http://www.gpac.io/" target="_blank">www.gpac.io</a>.</p>
+<hr />
+<p>The following steps show:</p>
+<ul>
+<li>how to encode raw videos in HEVC using HomerHEVC,</li>
+<li>how to encapsulate the HEVC bitstream in a MPEG2 Transport Stream or</li>
+<li>how to encapsulate the HEVC bitstream in a MP4 file using GPAC and</li>
+<li>how to play it using MP4Client&nbsp;player from GPAC.</li>
+</ul>
+<p>The entire process is collected in a <a href="https://github.com/jcasal-homer/HomerHEVC_DemoFiles/blob/master/HomerHEVC_GPAC_demo.py">Python script that can be downloaded from HomerHEVC repository in Github</a>:</p>
+<p><strong>1-</strong> Download HomerHEVC latest release executable for windows from sourceforge (<a href="https://sourceforge.net/projects/homerhevc/files/">https://sourceforge.net/projects/homerhevc/files/</a>) or HomerHEVC source code from GitHub (<a href="https://github.com/jcasal-homer/HomerHEVC/releases">https://github.com/jcasal-homer/HomerHEVC/releases</a>). Linux users please download and compile the code.</p>
+<p><strong>2-</strong> If you have downloaded the source code, compile HomerHEVC following the instructions in <a href="http://homerhevc.com/developers-corner/compilation-usage/">http://homerhevc.com/developers-corner/compilation-usage/</a></p>
+<p><strong>3-</strong> Encode your raw file by calling HomerHEVC application.</p>
+<p>The following command gives a configuration example. Remember to modify and adapt the configuration to your content (resolution, framerate or bitrate).</p>
+<pre><code>C:\HomerHEVC\homer_app -i input_file.yuv -o output_file.265 -widthxheight 1280x720 -intra_period 100 -n_frames 4000 -sao 1 -frame_rate 25 -bitrate 800 -performance_mode 2</code></pre>
+<p>For HomerHEVC configuration help, call:</p>
+<pre><code>C:\HomerHEVC\homer_app -h</code></pre>
+<p><strong>4-</strong> Download and install GPAC from <a href="http://gpac.io/downloads/gpac-nightly-builds/" target="_blank">http://gpac.io/downloads/gpac-nightly-builds/</a>. This package includes the <strong>Mp4Box</strong> and the <strong>mp42ts</strong> utilities and the MP4Client&nbsp;player.</p>
+<p><strong>5-</strong> Encapsulate the HEVC bitstream (.265) in an .mp4 file using GPAC. Again you have to adapt the framerate (fps) to your content properties.</p>
+<pre><code>C:\</code>GPAC\MP4Box -add&nbsp; output_file.265:fps=25 -new demo_video.mp4</pre>
+<p>For MP4Box configuration&nbsp;help call:</p>
+<pre><code>C:\</code>GPAC\MP4Box -h</pre>
+<p><strong>6-</strong> Encapsulate the .mp4 file in a MPEG2 Transport Stream&nbsp;(.ts).</p>
+<pre><code>C:\GPAC\mp42ts -prog demo_video.mp4 -dst-file demo_video.ts</code></pre>
+<p>For mp42ts&nbsp;configuration help call:</p>
+<pre><code>C:\GPAC\mp42ts -h</code></pre>
+<p><strong>At this point the HEVC encoded and encapsulated .mp4 or .ts video file should be able to be played in any HEVC player.</strong></p>
+<p><strong>7-</strong> Open the MP4Client&nbsp;player from the GPAC installation path and play the .mp4 or the .ts file.</p>
+<p>This can also be done with the following commands:</p>
+<pre><code>C:\GPAC\mp4client.exe demo_video.mp4</code></pre>
+<pre><code>C:\GPAC\mp4client.exe demo_video.ts</code></pre>
+<p><a class="image-anchor" href="http://homerhevc.com/wp-content/uploads/2015/11/MP4Client-playing-.mp4-file-created-using-HomerHEVC-and-GPAC.png"><img class="alignnone wp-image-191 size-full" src="http://homerhevc.com/wp-content/uploads/2015/11/MP4Client-playing-.mp4-file-created-using-HomerHEVC-and-GPAC.png" alt="MP4Client playing .mp4 file created using HomerHEVC and GPAC" width="1296" height="759" /></a></p>
+<p>MP4Client&nbsp;playing .mp4 file created using HomerHEVC and GPAC</p>
+<hr />
+</div>
+<p>If you want to know more about the HomerHEVC encoder, please visit <a href="http://homerhevc.com/">their website</a>.</p>

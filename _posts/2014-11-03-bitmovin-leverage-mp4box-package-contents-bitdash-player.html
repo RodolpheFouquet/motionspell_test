@@ -1,0 +1,190 @@
+---
+layout: post
+status: publish
+published: true
+title: How Bitmovin leverage MP4Box to package their contents for their bitdash player
+author:
+  display_name: Constance Gangneux
+  login: constance2
+  email: constance.gangneux@gpac-licensing.com
+  url: ''
+author_login: constance2
+author_email: constance.gangneux@gpac-licensing.com
+wordpress_id: 1567
+wordpress_url: http://www.gpac-licensing.com/?p=1567
+date: '2014-11-03 09:37:02 +0100'
+date_gmt: '2014-11-03 09:37:02 +0100'
+categories:
+- GPAC industry use-cases
+- Invited article
+tags: []
+comments:
+- id: 989
+  author: Check key-frame alignment with MP4Box | GPAC
+  author_email: ''
+  author_url: https://gpac.wp.mines-telecom.fr/2015/11/02/check-key-frame-alignment-with-mp4box/
+  date: '2015-11-02 11:36:05 +0100'
+  date_gmt: '2015-11-02 11:36:05 +0100'
+  content: "[&#8230;] Using x264:&nbsp;http://www.dash-player.com/blog/2014/11/mpeg-dash-content-generation-using-mp4box-and-x264/
+    [&#8230;]"
+---
+<h1 style="text-align: left;">How Bitmovin leverage MP4Box to package their contents for their bitdash player</h1>
+<p><strong>This is an invited article from <a href="http://bitmovin.net">Bitmovin</a>. This article belongs the "GPAC industry use-cases" category which shows how industry actors use GPAC in their projects. Please click here to read the <a href="http://www.dash-player.com/blog/2014/11/mpeg-dash-content-generation-using-mp4box-and-x264/">original version of this article</a>.</strong></p>
+<h2 style="text-align: left;"><strong>MPEG-DASH Generation with x264 and MP4Box</strong></h2>
+<p><strong>As many people have asked how to create MPEG-DASH content, e.g. to test it with the bitdash MPEG-DASH player [1], we will answer this question in this post.</strong></p>
+<ul>
+<li><strong>The Situation</strong></li>
+</ul>
+<p>A video is given in some container format, with a certain codec, probably including one or more audio tracks. Let&rsquo;s call this file &ldquo;inputvideo.mkv&rdquo;. This video should be prepared for MPEG-DASH playout.</p>
+<p>H.264/AVC for video will be used within segmented mp4 containers.</p>
+<ul>
+<li><strong>Tools</strong></li>
+</ul>
+<p>Two tools will be used. x264 [2] to prepare the video content, and MP4Box [3] to segment the file and create a Media Presentation Description (MPD).</p>
+<ul>
+<li><strong>Preparation</strong></li>
+</ul>
+<p>If the source video is already in the correct format, this step can be skipped. However, the odds are long for this being the case.</p>
+<p>The following command (re-) encodes the video in H.264/AVC with the properties we will need. All the command line parameters are explained after the code.</p>
+<p><code>x264 --output intermediate_2400k.264 --fps 24 --preset slow --bitrate 2400 --vbv-maxrate 4800 --vbv-bufsize 9600 --min-keyint 48 --keyint 48 --scenecut 0 --no-scenecut --pass 1 --video-filter "resize:width=1280,height=720" inputvideo.mkv</code></p>
+<p><code><br />
+<table width="624">
+<tbody>
+<tr>
+<td width="240">--output intermediate_2400k.264</td>
+<td width="384">Specifies the output filename. File extension is .264 as it is a raw H.264/AVC stream.</td>
+</tr>
+<tr>
+<td width="240">--fps 24</td>
+<td width="384">Specifies the framerate which shall be used, here 24 frames per second.</td>
+</tr>
+<tr>
+<td width="240">--preset slow</td>
+<td width="384">Presets can be used to easily tell x264 if it should try to be fast to enhance compression/quality. Slow is a good default.</td>
+</tr>
+<tr>
+<td width="240">--bitrate 2400</td>
+<td width="384">The bitrate this representation should achieve in kbps.</td>
+</tr>
+<tr>
+<td width="240">--vbv-maxrate 4800</td>
+<td width="384">Rule of thumb: set this value to the double of --bitrate.</td>
+</tr>
+<tr>
+<td width="240">--vbv-bufsize 9600</td>
+<td width="384">Rule of thumb: set this value to the double of --vbv-maxrate.</td>
+</tr>
+<tr>
+<td width="240">--keyint 96</td>
+<td width="384">Sets the maximum interval between keyframes. This setting is important as we will later split the video into segments and at the beginning of each segment should be a keyframe. Therefore, --keyint should match the desired segment length in seconds mulitplied with the frame rate. Here: 4 seconds * 24 frames/seconds = 96 frames.</td>
+</tr>
+<tr>
+<td width="240">--min-keyint 96</td>
+<td width="384">Sets the minimum interval between keyframes. See --keyint for more information.We achieve a constant segment length by setting minimum and maximum keyframe interval to the same value and furthermore by disabling scenecut detection with the --no-scenecut parameter.</td>
+</tr>
+<tr>
+<td width="240">--no-scenecut</td>
+<td width="384">Completely disables adaptive keyframe decision.</td>
+</tr>
+<tr>
+<td width="240">--pass 1</td>
+<td width="384">Only one pass encoding is used. Can be set to 2 to further improve quality, but takes a long time.</td>
+</tr>
+<tr>
+<td width="240">--video-filter "resize:width=1280,height=720"</td>
+<td width="384">Is used to change the resolution. Can be omitted if the resolution should stay the same as in the source video.</td>
+</tr>
+<tr>
+<td width="240">inputvideo.mkv</td>
+<td width="384">The source video</td>
+</tr>
+</tbody>
+</table>
+<p></code><br />
+Note that this are only example values. Depending on the use case you might need to use totally different options. For more details and options consult x264&rsquo;s documentation [4].</p>
+<ul>
+<li><strong>Segmenting</strong></li>
+</ul>
+<p>Now we add the previously created h264 raw video to an mp4 container as this is our container format of choice.</p>
+<p><code>MP4Box -add intermediate.264 -fps 24 output_2400k.mp4</code><br />
+<code><br />
+<table width="624">
+<tbody>
+<tr>
+<td width="217">intermediate_2400k.264</td>
+<td width="407">The H.264/AVC raw video we want to put in a mp4.</td>
+</tr>
+<tr>
+<td width="217">-fps 24</td>
+<td width="407">Specifies the framerate. H.264 doesn&rsquo;t provide meta information about the framerate so it&rsquo;s recommended to specify it. The number (in this example 24 frames per second) must match the framerate used in the x264 command.</td>
+</tr>
+<tr>
+<td width="217">output_2400k.mp4</td>
+<td width="407">The output file name.</td>
+</tr>
+</tbody>
+</table>
+<p></code><br />
+What follows is the step to actual create the segments and the corresponding MPD.</p>
+<p><code>MP4Box -dash 4000 -frag 4000 -rap -segment-name segment_ output_2400k.mp4</code><br />
+<code><br />
+<table width="624">
+<tbody>
+<tr>
+<td width="312">-dash 4000</td>
+<td width="312">Segments the given file into 4000ms chunks.</td>
+</tr>
+<tr>
+<td width="312">-frag 4000</td>
+<td width="312">Creates subsegments within segments and the duration therefore must be longer than the duration given to -dash. By setting it to the same value, there will only one subsegment per segment. Please see [5] for more information on fragmentation, segmentation, splitting and interleaving.</td>
+</tr>
+<tr>
+<td width="312">-rap</td>
+<td width="312">Forces segments to start random access points, i.e. keyframes. Segment duration may vary due to where keyframes are in the video - that&rsquo;s why we (re-) encoded the video before with the appropriate settings!</td>
+</tr>
+<tr>
+<td width="312">-segment-name segment_</td>
+<td width="312">The name of the segments. An increasing number and the file extension is added automatically. So in this case, the segments will be named like this: segment_1.m4s, segment_2.m4s, ...</td>
+</tr>
+<tr>
+<td width="312">output_2400k.mp4</td>
+<td width="312">The video we have created just before which should be segmented.</td>
+</tr>
+</tbody>
+</table>
+<p></code><br />
+Fore more details please refer to the MP4Box documentation [6].</p>
+<p>The output is one video representation, in form of segments. Additionally, there is one initialization segment, called output_2400k_dash.mp4. Finally, there is a MPD.</p>
+<p>And that&rsquo;s it.</p>
+<ul>
+<li><strong>What&rsquo;s next?</strong></li>
+</ul>
+<p>Just put the segments, the initialization segment, and the MPD onto a web server. Then point the bitdash player&rsquo;s config [7] to the MPD on the web server and enjoy your content.</p>
+<p>In case of problems with the player, please refer to the F.A.Q. [8].</p>
+<ul>
+<li><strong>What about more representations?</strong></li>
+</ul>
+<p>The steps explained in this post can be repeated over and over again, just pass another bitrate to x264. And make sure previously created files are not overwritten.</p>
+<p>For each representation another MPD will be created. As it is just a XML file, it is possible to open it with a text editor and copy &amp; paste the representation into the video AdaptationSet of another MPD file until all needed representations are in the same MPD.</p>
+<ul>
+<li><strong>What about audio?</strong></li>
+</ul>
+<p>The same MP4Box command as for video can be used. If you have audio already in a separate file, just use this as input.</p>
+<p><code>MP4Box -dash 4000 -frag 4000 -rap -segment-name segment_ audiofile.mp4</code></p>
+<p>If audio is in the video file, you can use the #audio selector:</p>
+<p><code>MP4Box -dash 4000 -frag 4000 -rap -segment-name segment_ video.mp4#audio</code></p>
+<p>To have the MPD content in the same MPD as video, copy &amp; paste the whole Adaptation Set.</p>
+<ul>
+<li><strong>Isn&rsquo;t there an easier way?</strong></li>
+</ul>
+<p>Check the bitmovin blog regularly, there will be something available within the next few weeks.</p>
+<p>--------------------------------------</p>
+<p>Sources:</p>
+<p>[1] <a href="http://www.dash-player.com/pricing/">http://www.dash-player.com/pricing/</a></p>
+<p>[2] <a href="http://www.videolan.org/developers/x264.html">http://www.videolan.org/developers/x264.html</a></p>
+<p>[3] <a href="http://gpac.io/downloads/">http://gpac.io/downloads/</a></p>
+<p>[4] <a href="http://mewiki.project357.com/wiki/X264_Settings">http://mewiki.project357.com/wiki/X264_Settings</a>/</p>
+<p>[5] <a href="http://gpac.io/2011/02/02/mp4box-fragmentation-segmentation-splitting-and-interleaving/">http://gpac.io/2011/02/02/mp4box-fragmentation-segmentation-splitting-and-interleaving/</a></p>
+<p>[6] <a href="http://gpac.io/mp4box/dash/">http://gpac.io/mp4box/dash/</a></p>
+<p>[7] <a href="http://www.dash-player.com/support/documentation/">http://www.dash-player.com/support/documentation/</a></p>
+<p>[8] <a title="http://www.dash-player.com/support/faq/" href="http://www.dash-player.com/support/faq/">http://www.dash-player.com/support/faq/</a></p>

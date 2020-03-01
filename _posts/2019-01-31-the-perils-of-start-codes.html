@@ -1,0 +1,158 @@
+---
+layout: post
+status: publish
+published: true
+title: The perils of start codes
+author:
+  display_name: Sebastien Alaiwan
+  login: alaiwans
+  email: sebastien.alaiwan@gpac-licensing.com
+  url: ''
+author_login: alaiwans
+author_email: sebastien.alaiwan@gpac-licensing.com
+wordpress_id: 2506
+wordpress_url: https://www.gpac-licensing.com/?p=2506
+date: '2019-01-31 13:25:01 +0100'
+date_gmt: '2019-01-31 13:25:01 +0100'
+categories:
+- Technology
+- Experts Opinions
+tags: []
+comments: []
+---
+<p><!-- wp:paragraph --></p>
+<p><strong>The perils of start codes</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In many video codecs, each top-level unit of video is prefixed with a predefined sequence of bytes, known as a "start code". This start code acts as a robust delimiter between top-level units.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This sequence is generally 3 or 4 byte long. Its content is normative, and was chosen so the likelihood for it to appear by chance in the middle of compressed video is very low. For example, in H.264, a typical start code is four bytes:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:preformatted --></p>
+<pre class="wp-block-preformatted">00 00 00 01</pre>
+<p><!-- /wp:preformatted --></p>
+<p><!-- wp:paragraph --></p>
+<p>It's indeed highly unlikely that an arithmetic encoder should produce such a low-entropy sequence. Thus, a parser looking for this sequence in a raw H.264 input file can quickly split up the sequence into top-level units, without having to parse the contents of these units. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Indeed, parsing the contents of these units is a more complex process. It requires several hundreds lines of code. It's very hard to get right, and even harder to prove correct, or validate. We generally only do this work when we're going to actually decode the stream.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Emulation prevention</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>There's a problem with start codes, though: they can't work alone.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Indeed, we have no guarantee that the magic start code sequence won't appear by chance in the middle of a top-level unit. It's unlikely, but not impossible. Actually, there are even parts of a bitstream where such collisions <em>will</em> almost always occur!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>For example, the VUI block of an H.264 SPS is not arithmetically encoded. It contains the framerate fraction, which is coded as two consecutive 4-byte integers. Then, if the framerate fraction is 25/1 FPS, the VUI hex bytes will look like this:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code> XX XX 00 00 00 19 00 00 00 01 YY YY</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>There's no way for a parser to distinguish this accidental "00 00 01" from a real start code. This is why another mechanism is needed, to 'escape' such 'accidental' start codes. This mechanism is called "emulation prevention".</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Basically, before packing compressed video data into an 'atomic unit',<br>a video encoder will look at this data, search for 'accidental' start codes, and insert a '03' byte, as an escape byte. The escaped VUI bytes would then look like this:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:preformatted --></p>
+<pre class="wp-block-preformatted">XX XX 00 00 <strong>03</strong> 00 19 00 00 <strong>03</strong> 00 01 YY YY</pre>
+<p><!-- /wp:preformatted --></p>
+<p><!-- wp:paragraph --></p>
+<p>Actually, as you might have noticed, the mechanism is a little more complicated than simply replacing "00 00 00 01" with "00 00 03 00 01". The "00 00 00 19" got escaped, although it didn't look like a start code.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This is because video decoders will have to do the reverse operation, and simply replacing "00 00 03 00 01" with "00 00 00 01" isn't going to work. Indeed, the string "00 00 03 00 01" could also accidentally appear in the middle of a top-level unit data, before the insertion of emulation prevention bytes ; A decoder implementation would happily replace this sequence with "00 00 00 01", thus corrupting the bitstream.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Emulation prevention problems</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Complication</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>The first problem with emulation prevention is that it complicates the implementation. It looks simple, but it is surprisingly easy to get wrong, and surprisingly hard to notice it. Moreover, you now have two buffers to deal with: the one with the escape bytes, and the one without. Their size differ, and converting from one to the other requires byte-per-byte scanning, plus the copy of all the "real" bytes (you can do emulation prevention escaping on-the-fly, but it has other drawbacks, related to performance).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Ambiguity</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Emulation prevention also creates an ambiguity about the meaning of 'sizes', 'offsets'. For example, when some syntax block contains its own size as a prefix, are we talking about the size before or after the insertion of emulation prevention bytes?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>HEVC made the choice to include the count of emulation prevention bytes in the value of "entry_point_offset" symbols, which represents byte offsets to the beginning of tiles. This seems like a good idea, because it allows decoders to split the work between tiles early, before the unescaping process. However, this strongly couples the internal layers of the codec ("slice_header.entry_point_offset") to its outer layer, i.e NAL units and start codes (aka "Annex B"). In one word, the codec deeper layer now <em>knows</em> that the outer layer exists, it knows it's going to be escaped. This is a violation of a layered model, and thus, it's as if the two layers had merged into one.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Concretely, you cannot anymore simply unescape an opaque top-level unit without changing its meaning: you now have to patch the values of some symbols.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Any format that defines its own framing does not need start codes, and could decide to store <em>non-escaped</em> H.264 and HEVC video units. Encapsulating HEVC video into this format would be one order of magnitude harder than for H.264, because now, the encapsulator has to deeply parse the HEVC elementary stream, recompute proper values for 'entry_point_offset' symbols, and <em>rewrite</em> the slice header.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The alternative, for such a format, is to remove the start codes, but keep the emulation prevention bytes. This is what the MP4 format does, and is clearly suboptimal.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Byte dis-alignment</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>In some cases, emulation prevention works actively against the byte-alignement. In AVS2 video bitstreams, the emulation prevention escape sequence consists of <em>two bits</em>. This means that escaping will invalidate the byte alignment of the following bits. This makes the 'byte_align()' function from AVS2 hanging between plain ambiguous and mostly useless.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Harder diagnostics</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>To make the matter worse, video compressed buffers, before and after inserting emulation prevention bytes, are most of the time identical. Indeed, for arithmetically encoded data, the probability of an accidental start code is very low, so generally there's no need to insert any escape byte.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>A non-escaped compressed video buffer:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>AB F3 B4 0C 95 81 7E 23 50 21 34 50 9A 43 12 AF AA 82 31</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>The same buffer, after escaping. See the difference? :-)</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>AB F3 B4 0C 95 81 7E 23 50 21 34 50 9A 43 12 AF AA 82 31</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>This makes error diagnosis harder: there's no way to tell, just by looking at the hex bytes, if a compressed buffer was already unescaped or not.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This allows implementation errors to go unnoticed. If an implementation erroneously forgets to unescape the compressed buffer at all, it can seem to work for a very long time, until the encoder one day decides to generate a bitstream that needs escape bytes.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The first version of the Apple iPod video player had exactly this issue: legitimate escape bytes in the input compressed video would cause the iPod to reboot! (at that time, my company had an "iPod compatibility" checkbox in the encoder configuration, dedicated to working around this problem).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Halfway emulation prevention</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Sometimes, some specific top-level units are transmitted out of band. For example, when streaming H.264 over RTP/UDP, the SPS/PPS NAL units are transmitted as base64 inside the SDP session descriptor, as the comma-separated 'sprop-parameter-sets' variable.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>a=fmtp:99 packetization-mode=0;profile-level-id=42e011; sprop-parameter-sets=Z0LgC5ZUCg/I,aM4BrFSAa</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>In this case, there's nothing to delimit, so there's no need for start codes. And, indeed, RFC 3984 requires to omit them.  However, it's not clear if emulation prevention bytes should be omitted or not. Spoiler: they should not. However, removing the start codes while keeping the escaping makes little sense. It's the binary equivalent of removing the double quotes of a C string literal without removing the backslashes!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Towards better solution</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>So, start codes and emulation prevention escaping come with their issues. What are the alternatives? Most importantly, what is it exactly that we're trying to solve here?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In a future post, we will take a step back, consider these questions from another point of view ; and suggest that maybe, we're trying to solve the wrong problem here.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:image {"id":2518,"width":577,"height":54} --></p>
+<figure class="wp-block-image is-resized"><img src="https://www.gpac-licensing.com/wp-content/uploads/2019/01/emulation_bytes.png" alt="" class="wp-image-2518" width="577" height="54"/><br />
+<figcaption>Byte sequence showing start codes (yellow) and emulation prevention bytes (red)</figcaption>
+</figure>
+<p><!-- /wp:image --></p>
+<p><!-- wp:paragraph --></p>
+<p><!-- /wp:paragraph --></p>

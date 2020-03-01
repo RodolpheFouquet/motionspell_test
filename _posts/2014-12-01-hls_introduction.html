@@ -1,0 +1,89 @@
+---
+layout: post
+status: publish
+published: true
+title: 'Apple HLS: introduction'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 1704
+wordpress_url: http://www.gpac-licensing.com/?p=1704
+date: '2014-12-01 15:22:44 +0100'
+date_gmt: '2014-12-01 15:22:44 +0100'
+categories:
+- Technology
+tags: []
+comments:
+- id: 1088
+  author: 'Apple HLS: technical in-depth - GPAC Licensing'
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2014/12/08/apple-hls-technical-depth/
+  date: '2016-02-24 16:36:35 +0100'
+  date_gmt: '2016-02-24 16:36:35 +0100'
+  content: "[&#8230;] An introduction to Apple HLS is available as: Apple HLS: introduction.
+    [&#8230;]"
+- id: 1249
+  author: HLS posts updated - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2016/05/03/hls-posts-updated/
+  date: '2016-06-03 09:52:06 +0200'
+  date_gmt: '2016-06-03 09:52:06 +0200'
+  content: "[&#8230;] Apple HLS: introduction [&#8230;]"
+---
+<h1>Apple HLS: introduction</h1>
+<p>A sequel to this article is available as: <a href="https://www.gpac-licensing.com/2014/12/01/apple-hls-comparing-versions/" target="_blank">Apple HLS: comparing versions</a>.</p>
+<h2>What is HLS</h2>
+<p>HLS is&nbsp;a protocol for transmitting multimedia data over HTTP. HLS describes a playlist format called M3U8 and a media segment format based on:</p>
+<ul>
+<li>MPEG-2 (TS, PS, ES),</li>
+<li>or ISOBMFF MPEG-4 Fragmented (starting at version 7, revision 20 from September 20, 2016).</li>
+</ul>
+<p>HLS supports the&nbsp;provision of alternate versions&nbsp;(e.g. bitrates, languages) and&nbsp;encryption of media data. HLS is suitable for live and on-demand playback.</p>
+<p>The input media stream is divided into Media Segments. Media segments typically last from 2 to 10 seconds. The playlist format is derived from the M3U format, a simple format for MP3 playlists, into a new extended format called M3U8 (the '8' suffix stands for UTF-8).</p>
+<h2>Master and Media Playlist examples</h2>
+<p>Here is a simple example of a Media Playlist:</p>
+<pre class="">#EXTM3U
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-TARGETDURATION:5
+#EXTINF:5,
+output_96000_0.ts
+#EXTINF:5,
+output_96000_1.ts
+#EXTINF:5,
+output_96000_2.ts
+#EXTINF:5,
+output_96000_3.ts
+#EXT-X-ENDLIST</pre>
+<p>A server may&nbsp;offer multiple Media Playlist files to provide different&nbsp;encodings of the same presentation. It is presented in a Master Playlist file. Here is an example:</p>
+<pre class="">#EXTM3U
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=96000
+96000/output_96000.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=256000
+256000/output_256000.m3u8</pre>
+<h2>M3U8 playlist description</h2>
+<p>The Extended M3U file format defines new tags detailed below.</p>
+<p>The playlist is called M3U8 by reference of the UTF-8 encoding used. The extension of the playlist file is .m3u8 and the expected mimetype is&nbsp;application/x-mpegURL (old) or application/vnd.apple.mpegurl (newer).</p>
+<p>Each line is a URI, a blank,&nbsp;or starts with the comment character '#'.&nbsp;Lines that start with the comment character '#' are either comments&nbsp;or tags. Tags begin with #EXT.</p>
+<h2>Media Segment format</h2>
+<p>The media segment format can be either:</p>
+<ul>
+<li>an MPEG-2 Transport Stream,</li>
+<li>an MPEG-2 Program Stream,</li>
+<li>an MPEG-2 audio elementary stream (AAC with ADTS framing, MP3 ; (Enhanced) AC-3 added at revision 20),</li>
+<li>an MPEG-4 Fragmented (revision 20), CMAF compliance (revision 23).</li>
+</ul>
+<p>Media Segments are self-initialized, i.e. they start with:</p>
+<ul>
+<li>MPEG-2 TS: a PAT then a PMT table,</li>
+<li>MPEG-4 Fragmented: CMAF Header compliance and CMAF Segment compliance,</li>
+<li>Video track:&nbsp;one key frame and enough information to completely initialize a video<br />
+decoder.</li>
+</ul>
+<p>Media Segment files may contain several audio or video. Starting at revision 4, it should consider&nbsp;the track with the lowest PID.</p>
+<h2>Apple official authoring requirements</h2>
+<p><a href="https://developer.apple.com/library/content/documentation/General/Reference/HLSAuthoringSpec/Requirements.html" target="_blank">Apple official authoring requirements</a></p>
+<p>An sequel to this article is available as: <a href="https://www.gpac-licensing.com/2014/12/01/apple-hls-comparing-versions/" target="_blank">Apple HLS: comparing versions</a>.&nbsp;A technical analysis of the versions is available as: <a href="https://www.gpac-licensing.com/2014/12/08/apple-hls-technical-depth/" target="_blank">Apple HLS: technical in-depth</a>.</p>

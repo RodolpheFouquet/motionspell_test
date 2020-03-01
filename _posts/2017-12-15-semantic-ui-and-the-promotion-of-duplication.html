@@ -1,0 +1,45 @@
+---
+layout: post
+status: publish
+published: true
+title: Semantic UI And The Promotion Of Duplication
+author:
+  display_name: Rodolphe Fouquet
+  login: rfouquet
+  email: rodolphe.fouquet@gpac-licensing.com
+  url: https://www.gpac-licensing.com
+author_login: rfouquet
+author_email: rodolphe.fouquet@gpac-licensing.com
+author_url: https://www.gpac-licensing.com
+wordpress_id: 2306
+wordpress_url: https://www.gpac-licensing.com/?p=2306
+date: '2017-12-15 08:06:29 +0100'
+date_gmt: '2017-12-15 08:06:29 +0100'
+categories:
+- Technology
+- Experts Opinions
+tags: []
+comments: []
+---
+<h1>Semantic UI And The Promotion Of Duplication</h1>
+<h3>The way to Semantic UI</h3>
+<p>You may know that, here, at GPAC, we are mostly "low level" application developers. Developing low level native apps is what we mostly do.</p>
+<p>However, in 2017, a low level apps is often not enough and you have to provide tools&nbsp;and REST apis to drive those apps. And whenever you have a REST api, web based tools are often the de facto choice to use them. So, here you go, you have designed your REST api, and the next step, is to provide a web app to use this API, and as any good website, it has to be responsive, and you may probably want to use a reponsive framework.</p>
+<p>When I say responsive framework, admit it, the first one you though about was <a href="https://v4-alpha.getbootstrap.com/">Bootstrap</a>&nbsp;, right? As do I. And for the new tool I wanted to build, I wanted to explore alternatives. One of the most suggested alternative is <a href="https://semantic-ui.com/">Semantic UI&nbsp;</a>.</p>
+<p><a href="https://www.gpac-licensing.com/wp-content/uploads/2017/12/Screenshot-2017-12-6-Semantic-UI.png"><img class="aligncenter wp-image-2307 size-full" src="https://www.gpac-licensing.com/wp-content/uploads/2017/12/Screenshot-2017-12-6-Semantic-UI.png" alt="" width="897" height="518" /></a></p>
+<p>First, I browsed the documentation and some examples. And the framework makes an astounding first impression. Quite easy to use, easily customizable, and looking gorgeous by default. And bonus point... finally a website not looking like the thousands of Bootstrap based ones.</p>
+<h3>The crust cracks, the way out Semantic UI</h3>
+<p>And then, the sexy crust starts to crack. First, the framework lacks an easy webpack integration. Sure, you can make it work with webpack, but unlike Bootstrap, it is not straight forward and you have do plug some plugins to make it work.</p>
+<p>And finally, the worst occurs. As most websites use a navbar, you want to put a sexy responsive navbar on your website. Since it's advertised as a responsive framework, you think that, like any other responsive framework, your navbar will be automatically responsive. You couldn't be more wrong about it: it is not. So you go on github, to see whether you've done something wrong or not, and you end up landing on this <a href="https://github.com/Semantic-Org/Semantic-UI/issues/157">3 year old Github issue</a>.</p>
+<p>You start reading the posts, and it seems rather promissing, a user thinks it needs to be implemented in the framework, the repository owner says:</p>
+<blockquote><p>Seeing the amount of activity on this, I'll prioritize this for this or next week.</p></blockquote>
+<p>And then, you continue reading, on, and on, you see a bunch of&nbsp; "+1" on the page, people desperately asking for a workaround, and then finally, the owner says:</p>
+<blockquote><p>I do think however the downsides to including separate html to render your mobile menu is negligible. Generally you'll want to organize the links in a different way, use different styles and remove items for mobile. The only downside to including it twice is 'lack of elegance' which I can understand how would upsetting for devs and a few more text over the wire.</p></blockquote>
+<p>It took more than a year to get such an anwser. Sir, no. It's not a "lack of elegance".</p>
+<ul>
+<li>The goal of a responsive framework is to avoid that kind of issue in the first place. A responsive framework should not push a dev to make code duplicates for such a basic element. Yes, you have to duplicate your menu, and you may also have to duplicate some javascript code wiring that up. It may be usual for a custom dev or a small framework. It is not for one of the biggest responsive framework available on the web.</li>
+<li>Ok, maybe we should consider that&nbsp; you do not want to implement this for "reasons", I guess. Then, at least, since it is such a huge demand, put a workaround in your documentation, something that can help the developers currently using your solution, and newcomers that may be lost or wondering what they've done wrong when they realize their menu isn't responsive.</li>
+<li>Really? It really took 3 years to make such an answer?</li>
+<li>Oh come one... did you really have to lock the issue? Couldn't you just take the responsibility an say "we won't do it"? How childish.</li>
+</ul>
+<p>Well, having the millionth website based on Bootstrap is not that bad, after all...</p>

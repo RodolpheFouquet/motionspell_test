@@ -1,0 +1,245 @@
+---
+layout: post
+status: publish
+published: true
+title: 'Apple HLS: technical in-depth'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 1806
+wordpress_url: http://www.gpac-licensing.com/?p=1806
+date: '2014-12-08 08:52:04 +0100'
+date_gmt: '2014-12-08 08:52:04 +0100'
+categories:
+- Technology
+tags: []
+comments:
+- id: 507
+  author: 'Apple HLS: technical in-depth - GPAC Licensing ...'
+  author_email: ''
+  author_url: http://www.scoop.it/t/video-everywhere-with-a-headache/p/4033224783/2014/12/09/apple-hls-technical-in-depth-gpac-licensing
+  date: '2014-12-09 06:36:01 +0100'
+  date_gmt: '2014-12-09 06:36:01 +0100'
+  content: "[&#8230;] Apple HLS: technical in-depth Content Master, Variants and Renditions
+    Version 1 Version 2 Version 3 Version 4 Version 5 Version 6 Version 7 An introduction
+    to Apple HLS is available as: Apple HLS: introduction. A summary table of the
+    versions &hellip; Continue reading &rarr;&nbsp; [&#8230;]"
+- id: 916
+  author: Gregory
+  author_email: blackberryoctopus@gmail.com
+  author_url: ''
+  date: '2015-09-18 15:08:37 +0200'
+  date_gmt: '2015-09-18 15:08:37 +0200'
+  content: "Your page says \"A playlist that contains an EXT-X-PLAYLIST-TYPE tag with
+    a value of EVENT or VOD must not contain an EXT-X-DISCONTINUITY-SEQUENCE tag.\"\r\n\r\nI
+    cannot find that limitation within the most recent spec version: \r\n\r\nhttps://tools.ietf.org/html/draft-pantos-http-live-streaming-16#section-6.2.2\r\n\r\n\r\nWhere
+    did the requirement that #EXT-X-DISCONTINUITY-SEQUENCE only be used with LIVE
+    playlist types come from ?"
+- id: 917
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2015-09-18 15:38:47 +0200'
+  date_gmt: '2015-09-18 15:38:47 +0200'
+  content: "You are right. This remark was only valid for revision 13 (3.4.12, https://tools.ietf.org/html/draft-pantos-http-live-streaming-13)
+    and removed at revision 14 (https://tools.ietf.org/html/draft-pantos-http-live-streaming-14).
+    Text was amended, thank you. Don't hesitate if you have any other feedback!\r\n\r\nWe
+    need to update this document regularly. Any contribution is warmly welcome :)"
+- id: 1171
+  author: 'Streaming: The HLS Version 4 hype, and the whole truth about it #9 - Francesco
+    Altomare &#8211; Cloud Architect'
+  author_email: ''
+  author_url: http://www.francescoaltomare.it/streaming-the-hls-version-4-hype-and-the-whole-truth-about-it-9/
+  date: '2016-04-14 15:44:09 +0200'
+  date_gmt: '2016-04-14 15:44:09 +0200'
+  content: "[&#8230;] 1 [&#8230;]"
+- id: 1700
+  author: Leandro Moreira
+  author_email: leandro.ribeiro.moreira@gmail.com
+  author_url: http://leandromoreira.com.br
+  date: '2018-01-18 14:08:08 +0100'
+  date_gmt: '2018-01-18 14:08:08 +0100'
+  content: Thanks for sharing this amazing post, it'd be pretty nice to have a doc
+    like that for MPEG dash as well :D
+- id: 1703
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2018-01-18 21:03:01 +0100'
+  date_gmt: '2018-01-18 21:03:01 +0100'
+  content: Thank you Leandro! At the moment we still sell trainings on MPEG-DASH to
+    finance the GPAC open-source development. Let us know if we can help.
+---
+<p><ins datetime="2016-04-20T19:30:56+00:00"><br />
+<h1>Apple HLS: technical in-depth</h1>
+<p><strong>Content</strong></p>
+<ul>
+<li><a href="#defs">Master, Variants and Renditions</a></li>
+<li><a href="#v1">Version 1</a></li>
+<li><a href="#v2">Version 2</a></li>
+<li><a href="#v3">Version 3</a></li>
+<li><a href="#v4">Version 4</a></li>
+<li><a href="#v5">Version 5</a></li>
+<li><a href="#v6">Version 6</a></li>
+<li><a href="#v7">Version 7</a></li>
+</ul>
+<p>An introduction to Apple HLS is available as: <a href="https://www.gpac-licensing.com/2014/12/01/hls_introduction/" target="_blank">Apple HLS: introduction</a>.</p>
+<p>A summary table of the versions and revisions is available as: <a href="https://www.gpac-licensing.com/2014/12/01/apple-hls-comparing-versions/" target="_blank">Apple HLS: comparing versions</a>.</p>
+<h2><a id="defs" style="color: #fff;"></a>Master, Variants and Renditions</h2>
+<p>A complex presentation can be described by a <b>Master</b> Playlist.</p>
+<p>The Master Playlist provides a set of <b>Variant Streams</b>, each of which describes a different version of the same content.</p>
+<p>A Variant Stream can also specify a set of <b>Renditions</b>. Renditions are alternate versions of the content, such as audio produced in different languages or video recorded from different camera angles.</p>
+<h2><a id="v1" style="color: #fff;"></a>Version 1</h2>
+<p>The initial version defines nine new tags:</p>
+<h4>EXTM3U</h4>
+<p style="padding-left: 30px;">An&nbsp;Extended M3U file is distinguished from a basic M3U file by its first&nbsp;line which MUST be #EXTM3U.</p>
+<h4>EXTINF</h4>
+<p style="padding-left: 30px;">An Extended Info Marker describing the media file that follows it:</p>
+<pre class="" style="padding-left: 30px;">#EXTINF:<duration>,<title></pre>
+<h4>EXT-X-TARGETDURATION</h4>
+<p style="padding-left: 30px;">Approximate duration of&nbsp;the next media file (the real duration must be less or equal). The EXTINF duration segment file must be less than or equal than EXT-X-TARGETDURATION:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-TARGETDURATION:<seconds></pre>
+<h4>EXT-X-MEDIA-SEQUENCE</h4>
+<p style="padding-left: 30px;">Sequence number:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-MEDIA-SEQUENCE:<number></pre>
+<p style="padding-left: 30px;">Starting at version 5, a&nbsp;client shall not&nbsp;assume that segments with the same media sequence number in&nbsp;different masters, variants or renditions contain matching content.</p>
+<h4>EXT-X-KEY</h4>
+<p style="padding-left: 30px;">Optional tag. The encryption algorithm is AES-128 CBC with PKCS7 padding:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-KEY:METHOD=<method>[,URI="<URI>"]</pre>
+<h4>EXT-X-PROGRAM-DATE-TIME</h4>
+<p style="padding-left: 30px;">Associates the beginning of the next&nbsp;media file with an absolute time:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-PROGRAM-DATE-TIME:<YYYY-MM-DDThh:mm:ssZ></pre>
+<p style="padding-left: 30px;">Starting at revision 20 (version 7) it should provides milliseconds:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-PROGRAM-DATE-TIME:<YYYY-MM-DDThh:mm:ss.SSSZ>></pre>
+<h4>EXT-X-ALLOW-CACHE</h4>
+<p style="padding-left: 30px;">Specifies whether the client may cache&nbsp;downloaded media files for later replay:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-ALLOW-CACHE:<YES|NO></pre>
+<h4>EXT-X-STREAM-INF</h4>
+<p style="padding-left: 30px;">The next URI in the Playlist is another Playlist file:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-STREAM-INF:[BANDWIDTH=<n>],[PROGRAM-ID=<i>],[CODECS="[format][,format]*"]&nbsp;<URI></pre>
+<h4>EXT-X-ENDLIST</h4>
+<p style="padding-left: 30px;">We reached the end of the playlist:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-ENDLIST</pre>
+<h4>EXT-X-DISCONTINUITY</h4>
+<p style="padding-left: 30px;">Added in revision 2.</p>
+<p style="padding-left: 30px;">Indicates that the next media file&nbsp;has different characteristics than the previous one:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-DISCONTINUITY</pre>
+<h2><a id="v2" style="color: #fff;"></a>Version 2</h2>
+<h4>EXT-X-STREAM-INF (additions)</h4>
+<p style="padding-left: 30px;">The&nbsp;RESOLUTION=<N>x<M> attribute is added.</p>
+<h4>EXT-X-VERSION</h4>
+<p style="padding-left: 30px;">Indicates the compatibility version of the&nbsp;Playlist file:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-VERSION:<n></pre>
+<h4>EXT-X-KEY&nbsp;(additions)</h4>
+<p style="padding-left: 30px;">Added the optional IV attribute.</p>
+<h2><a id="v3" style="color: #fff;"></a>Version 3</h2>
+<h4>EXTINF&nbsp;(additions)</h4>
+<p style="padding-left: 30px;">The duration can be expressed with a floating point argument.</p>
+<h4>EXT-X-PLAYLIST-TYPE</h4>
+<p style="padding-left: 30px;">Optional:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-PLAYLIST-TYPE:<EVENT|VOD>
+</pre>
+<p style="padding-left: 30px;">If the tag is present and has a&nbsp;value VOD, the playlist shall not change. If the tag is present and has a&nbsp;value of EVENT, the server may only append lines to&nbsp;the playlist.</p>
+<h2><a id="v4" style="color: #fff;"></a>Version 4</h2>
+<h4>Rendition groups</h4>
+<p style="padding-left: 30px;">A set of EXT-X-MEDIA tags with the same GROUP-ID value forms a group&nbsp;of renditions.</p>
+<h4>EXT-X-STREAM-INF (additions)</h4>
+<p style="padding-left: 30px;">New AUDIO and VIDEO attributes.</p>
+<pre class="" style="padding-left: 30px;">AUDIO (resp. VIDEO)
+The value is a quoted-string. It MUST match the value of the
+ GROUP-ID attribute of an EXT-X-MEDIA tag elsewhere in the Playlist
+ whose TYPE attribute is AUDIO (resp. VIDEO). It indicates the set of audio
+ renditions that MAY be used when playing the presentation.</pre>
+<h4>EXT-X-BYTERANGE</h4>
+<p style="padding-left: 30px;">Indicates that a media file is a sub-range of the resource identified by its media URI:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-BYTERANGE:<n>[@o]</pre>
+<p class="" style="padding-left: 30px;">With:</p>
+<ul>
+<li>n: length of the sub-range</li>
+<li>o (optional): offset, may be inferred from the previous media segment length and computed offset.</li>
+</ul>
+<h4>EXT-X-MEDIA</h4>
+<p style="padding-left: 30px;">Indicates that playlists contain alternate&nbsp;renditions of the&nbsp;same content. For example two audio languages, or two video camera angles:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-MEDIA:[TYPE={AUDIO,VIDEO}],[URI],[GROUP-ID],[LANGUAGE],[NAME],[DEFAULT={YES,NO}],[AUTOSELECT={YES,NO}]</pre>
+<h4>EXT-X-I-FRAME-STREAM-INF</h4>
+<p style="padding-left: 30px;">Identifies a playlist&nbsp;containing the I-frames of a multimedia presentation. It stands alone, in that it does not apply to a particular URI in the playlist:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-I-FRAME-STREAM-INF:<attribute-list></pre>
+<p style="padding-left: 30px;">Same attributes as&nbsp;EXT-X-STREAM-INF, minus the AUDIO attributes, plus a URI attribute to identify the I-frame playlist file.</p>
+<h4>EXT-X-I-FRAMES-ONLY</h4>
+<p style="padding-left: 30px;">Indicates that each media segment in the&nbsp;Playlist describes a single I-frame:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-I-FRAMES-ONLY</pre>
+<h2><a id="v5" style="color: #fff;"></a>Version 5</h2>
+<h4>Subtitle segments</h4>
+<p style="padding-left: 30px;">They must use WebVTT.</p>
+<p style="padding-left: 30px;">Each WebVTT segment MUST have an X-TIMESTAMP-MAP metadata header.</p>
+<h4>EXT-X-KEY (additions)</h4>
+<p style="padding-left: 30px;">New encryption method SAMPLE-AES.&nbsp;SAMPLE-AES only encrypts the audio and video payloads. This is how DVB encryption works also.</p>
+<p style="padding-left: 30px;">The legacy encryption in HLS was called AES-128. AES-128 encrypts the full TS packets including headers.</p>
+<p style="padding-left: 30px;">The possible attributes are URI,&nbsp;IV,&nbsp;KEYFORMAT,&nbsp;KEYFORMATVERSIONS.</p>
+<h4>EXT-X-MEDIA&nbsp;(additions)</h4>
+<p style="padding-left: 30px;">The TYPE attribute can have the value SUBTITLES.</p>
+<p style="padding-left: 30px;">New attributes [FORCED={YES,NO}], [CHARACTERISTICS=UTI].</p>
+<h4>EXT-X-MAP</h4>
+<p style="padding-left: 30px;">The EXT-X-MAP tag specifies how to obtain the Transport Stream PAT/</p>
+<p>PMT for the applicable media segment.</p>
+<p style="padding-left: 30px;">It applies until the next&nbsp;EXT-X-DISCONTINUITY tag</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-MAP:<attribute-list></pre>
+<p style="padding-left: 30px;">With the attributes URI and BYTERANGE.</p>
+<h2><a id="v6" style="color: #fff;"></a>Version 6</h2>
+<h4>EXT-X-MEDIA (additions)</h4>
+<p style="padding-left: 30px;">Added the TYPE attribute value CLOSED-CAPTIONS. The media segments for the video renditions can&nbsp;include closed captions.</p>
+<p style="padding-left: 30px;">The attributes URI,&nbsp;ASSOC-LANGUAGE,&nbsp;CHARACTERISTICS and&nbsp;INSTREAM-ID={CC1,CC2,CC3,CC4} are added.</p>
+<h4>EXT-X-STREAM-INF (additions and removals)</h4>
+<p style="padding-left: 30px;">The&nbsp;CLOSED-CAPTIONS attribute is added.</p>
+<p style="padding-left: 30px;">The PROGRAM-ID attribute is removed.</p>
+<h4>EXT-X-I-FRAME-STREAM-INF&nbsp;(removals)</h4>
+<p style="padding-left: 30px;">The PROGRAM-ID attribute is removed.</p>
+<h4>EXT-X-DISCONTINUITY-SEQUENCE</h4>
+<p style="padding-left: 30px;">Allows synchronization between&nbsp;different renditions of the entire playlist, same variant stream or different variant&nbsp;streams that have EXT-X-DISCONTINUITY tags in their playlists:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-DISCONTINUITY-SEQUENCE:<number></pre>
+<p style="padding-left: 30px;">For <a href="https://tools.ietf.org/html/draft-pantos-http-live-streaming-13">revision 13</a> specifically, a playlist that contains an EXT-X-PLAYLIST-TYPE tag with a&nbsp;value of EVENT or VOD must not&nbsp;contain an EXT-X-DISCONTINUITY-SEQUENCE tag.</p>
+<h4>EXT-X-START</h4>
+<p style="padding-left: 30px;">Indicates a preferred point at which to start&nbsp;playing a playlist:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-START:[TIMEOFFSET],[PRECISE={YES,NO}]</pre>
+<h4>Media Segments (audio only)</h4>
+<pre class="" style="padding-left: 30px;">Each Elementary Audio Stream segment MUST signal the timestamp of its
+ first sample with an ID3 PRIV tag [ID3] at the beginning of the
+ segment. The ID3 PRIV owner identifier MUST be
+ "com.apple.streaming.transportStreamTimestamp". The ID3 payload MUST
+ be a 33-bit MPEG-2 Program Elementary Stream timestamp expressed as a
+ big-endian eight-octet number, with the upper 31 bits set to zero.</pre>
+<h4>EXT-X-INDEPENDENT-SEGMENTS</h4>
+<p style="padding-left: 30px;">Added at revision 13.</p>
+<p style="padding-left: 30px;">Indicates that all media samples&nbsp;in a segment can be decoded without information from other segments:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-INDEPENDENT-SEGMENTS
+</pre>
+<h2><a id="v7" style="color: #fff;"></a>Version 7</h2>
+<p>The specification was re-written in a more readable way.</p>
+<h4>Alternative Renditions</h4>
+<p style="padding-left: 30px;">EXT-X-STREAM-INF tag containing an AUDIO, VIDEO, SUBTITLES, or CLOSED-CAPTIONS attribute indicates that alternative Renditions are available for playback of that Variant Stream.</p>
+<h4>EXT-X-SESSION-DATA</h4>
+<p style="padding-left: 30px;">Allows arbitrary session data to be&nbsp;carried in a Master Playlist:</p>
+<pre class="newpage" style="padding-left: 30px;">#EXT-X-SESSION-DATA:<attribute list></pre>
+<p style="padding-left: 30px;">The attributes&nbsp;DATA-ID, VALUE, LANGUAGE and URI are defined.</p>
+<h4>EXT-X-STREAM-INF (additions)</h4>
+<p style="padding-left: 30px;">The&nbsp;AVERAGE-BANDWIDTH attribute was added.</p>
+<p style="padding-left: 30px;">The&nbsp;FRAME-RATE attribute was added in revision 15.</p>
+<p style="padding-left: 30px;">The&nbsp;HDCP-LEVEL attribute was added in revision 20.</p>
+<h4>EXT-X-ALLOW-CACHE (removal)</h4>
+<p style="padding-left: 30px;">The tag was removed.</p>
+<h4>EXT-X-MEDIA (additions)</h4>
+<p style="padding-left: 30px;">INSTREAM-ID value SERVICE indicated a CEA-708&nbsp;Digital&nbsp;Television Closed Captioning.</p>
+<p style="padding-left: 30px;">(Revision 20): the attribute CHANNELS is added.</p>
+<h4>EXT-X-DATERANGE (revision 19)</h4>
+<p style="padding-left: 30px;">associates a time/date range (oddly named "Date Range") with an attribute/value pair:</p>
+<pre class="newpage" style="padding-left: 30px;">#EXT-X-DATERANGE:<attribute list></pre>
+<p style="padding-left: 30px;">The attributes&nbsp;ID, CLASS, START-DATE, END-DATE, DURATION, PLANNED-DURATION, X-<client-attribute> (client defined), SCTE35-CMD, SCTE35-OUT, SCTE35-IN and END-ON-NEXT are defined.</p>
+<h4>EXT-X-KEY</h4>
+<p style="padding-left: 30px;">Starting at revision 20 (version 7) it should provides milliseconds:</p>
+<pre class="" style="padding-left: 30px;">#EXT-X-PROGRAM-DATE-TIME:<YYYY-MM-DDThh:mm:ss.SSSZ>></pre>
+<h4>EXT-X-MAP</h4>
+<p style="padding-left: 30px;">Made mandatory for MPEG-4 Fragmented (starting at revision 20).</p>

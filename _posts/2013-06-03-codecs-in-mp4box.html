@@ -1,0 +1,31 @@
+---
+layout: post
+status: publish
+published: true
+title: Codecs import/export in MP4Box
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 305
+wordpress_url: http://www.gpac-licensing.com/?p=305
+date: '2013-06-03 20:03:30 +0200'
+date_gmt: '2013-06-03 20:03:30 +0200'
+categories:
+- GPAC Open-Source
+- Technology
+tags: []
+comments: []
+---
+<h1>Codecs import/export in MP4Box</h1>
+<p>MP4Box allows you to import or export data from your multiplexed files, without modifying their contents. Simple, isn't it? It is because MP4Box hides you many details that are to no interest for 99% of the users, but allows your files to be compatible with the standards.</p>
+<p>However, did you know that a codec raw stream is stored differently when carried alone, in the ISOBMF (MP4) container, or in the MPEG2-TS container?&nbsp;A good example is the leading H264/AVC codec. It is not carried the same way when extracted alone (as a vector of NALUs - Network Abstraction Layer Units) or when multiplexed. And even multiplexed, it will appear under different formats:</p>
+<ul>
+<li>Annex B (ISO 14496/10, MPEG4 part 10) defines a bitstream format. It allows H264 to be packages in containers which may not separation properly the NALUs, such as MPEG2-TS (ISO 13818/1, MPEG2 part 1).</li>
+<li>ISOBMF (ISO 14496/15, MPEG4 part 15) defines it own format. The bitstream startcode is replaced by the size of the NALU and the descriptors (SPS/PPS are stored either in the decoder configuration of the video track or in a separate parameter set sample).</li>
+</ul>
+<p>All these possibilities make modern multimedia tools very efficient, but also difficult to handle.</p>
+<p>MP4Box simplifies the process for you and automatically detects the appropriate format. Sometimes MP4Box won't cover your specific use-case, and you will need to make a addition to GPAC or to build your own tool based on<em> libgpac</em>, the core library of GPAC. <em>libgpac</em>&nbsp;handles both&nbsp;<strong>import</strong>&nbsp;and&nbsp;<strong>export</strong>, exposed through the MP4Box interface, which allows to cover most of the possible use-cases!</p>

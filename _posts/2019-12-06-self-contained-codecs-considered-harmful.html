@@ -1,0 +1,165 @@
+---
+layout: post
+status: publish
+published: true
+title: Self-contained codecs considered harmful
+author:
+  display_name: Sebastien Alaiwan
+  login: alaiwans
+  email: sebastien.alaiwan@gpac-licensing.com
+  url: ''
+author_login: alaiwans
+author_email: sebastien.alaiwan@gpac-licensing.com
+wordpress_id: 2485
+wordpress_url: https://www.gpac-licensing.com/?p=2485
+date: '2019-12-06 06:10:40 +0100'
+date_gmt: '2019-12-06 06:10:40 +0100'
+categories:
+- Technology
+- Experts Opinions
+tags: []
+comments: []
+---
+<p><!-- wp:heading --></p>
+<h2>Self-contained codecs considered harmful</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>A stream of compressed video is composed of many successive top-level units of video. These units are, most of the time, considered atomic by encapsulators and muxers.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In some codecs, like VP9, these top-level units represent a whole compressed picture. In some other codecs, like H.264 and HEVC, these units (called "NAL" units) can represent a partial chunk of a compressed picture, a single set of parameters (SPS, PPS, etc.), or even a picture delimiter (AUD). So, there's generally no one-to-one mapping between top-level units and pictures.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The problem is: how to delimit those top-level units?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>MPEG start codes</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>We saw, in a previous post, that MPEG codecs use start codes as delimiter. However, we also saw that this technique, in order to  be robust, also required emulation prevention escaping, which caused many pratical issues, like room for more ambiguity in the specification, and room for more silent implementation issues.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>An alternative: AVCC</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>It turns out that MPEG 4 Part 15 defines an alternative container format for H.264 and HEVC elementary streams: AVCC, also called the "canonical format".</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>AVCC is very simple: don't bother adding any start code, or emulation prevention byte, just always prefix the top-level unit with its size, coded on four bytes. We're now limited to 4GB top-level units, but no ambiguity is possible here &hellip; as long as no input byte is ever lost.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Indeed, we just lost the possibility of easily recovering synchronization, in case some unknown amount of compressed video data was lost. Start codes were impossible to confuse : just by looking, if you see "00 00 01" in a compressed HEVC video stream, you know it's a start code.  A confused decoder could simply wait for this "00 00 01" sequence to occur on its input, and then resume decoding from there.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>It's clear that synchronization recovery with AVCC is a lot more involved, and, ultimately, not decidable. However, it's not a real problem in practice. The situations where you have to deal with unframed elementary streams coming from non-reliable I/O are almost non-existent.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Let's dig deeper, as some other codecs chose another path.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Another alternative: #noframing</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Some codecs, like VP8, VP9 codecs, and the Windows Media family (WMV, VC-1, WMA) completely ignore the framing issue by letting the container handle it. There is no top-level framing: no size prefix, no start codes, and even less emulation prevention bytes.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>If you concatenate all the top-level units of of VP9 stream to a single file, the only way to reconstruct the delimitation is to fully parse every picture. It might not even be possible for some codecs, depending whether the parsing relies on framing information or not (as does H.264 with its SPS).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The framing is thus defined by the container. But when working on a video codec, you generally don't want to bother with the complexity overhead of a container. WEBM/MKV is nice, but I prefer not having to deal with it when debugging a VP9 decoder.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This is why the IVF container was defined. This container always contain exactly one elementary stream, and its file format is awfully simple: one fixed-size file header (containing a FOURCC code indicating the codec), followed by compressed frames, each one prefixed with a fixed-size frame header. The frame header contains the size in bytes of the immediately following frame.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The complexity overhead of IVF is minimal, and, anyway, one order of magnitude less than the complexity of start codes + emulation prevention.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Where does this leaves us?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>The hard job of encapsulators</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>In one word: in the current state of the industry, encapsulators must implement codec-specific parsing (and sometimes bitstream rewriting) for all the codecs they support.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Let's have a look at the work involved for following command, to mux H.264 video to MPEG-2 Transport Stream:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>ffmpeg -i my_video.es my_muxed_video.ts</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Picture delimitation</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>The MPEG-2 Transport Stream standard requires an explicit delimitation between successive pictures (PUSI=1), as it requires one PES packet per picture. So FFmpeg has to reconstruct the pictures, generally from multiple NAL units. To make the matter worse, in H.264, although the start codes make it easy to delimitate the NAL units, delimiting the pictures themselves is hard as hell. The only clear separation between pictures ('access unit delimiter' NAL unit) is optional. It's possible to non-ambiguously tell that the next NAL unit belongs to a new picture, but it requires parsing the bitstream a lot more deeper than the start codes. HEVC makes this job a little easier, but still requires some (shallow) codec-specific bitstream parsing.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Picture ordering</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>The way MPEG2 Transport Stream demuxers are generally implemented requires that a timestamp (PTS) is conveyed along each picture. We only have one stream here, so there's nothing to synchronized it with, so we could use any starting point for our timestamp values. But we have to generate them consistently. Let's assume pictures are transmitted in order (spoiler alert: they're generally not). Let's also assume the framerate is constant. What is its value? The framerate value might be specified in the VUI parameters of the SPS ; however, it requires parsing a lot of stuff we don't need for muxing. Moreover, H.264 makes it optional anyway. You could as well have an H.264 elementary stream with no framerate, or even, with a variable framerate.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Codec recovery</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Third, the codec. How does FFmpeg knows that my_video.es is actually H.264?  There's no way to be sure, so it implements codec probing (which could also be called 'codec guessing').  This is a fundamentally undecidable problem. You cannot "guess", in general, the format of a file. (Indeed, it's sometimes possible to craft files that are valid in several unrelated formats!). To make the matter worse, H.264 and HEVC bitstreams, are very similar at the hex level. Try sending an H.264 bitstream to a hardware HEVC decoder: it's a great experiment for testing its robustness!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>The origin of the problem</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>For such an apparently simple task, the amount of codec-specific work FFmpeg has to do is ludicrous, and it has to be implemented again at each new codec. If I now type:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>ffmpeg -i my_audio.aac my_muxed_audio.ts</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>&hellip; all of this work has to be done again, but, this time, with AAC-specific code.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>To make the matter worse, the elementary stream will lose a lot of information that the encoder knew. Let's suppose now we want to remux a stream from MKV to TS, FFmpeg makes it as easy as:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>ffmpeg -i input_video.mkv -vcodec copy output_video.ts</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>However, suppose that for some reason, we want to apply some custom processing to the video elementary stream (for example, we might want to remove some SEI NAL units).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:code --></p>
+<pre class="wp-block-code"><code>ffmpeg -i input_video.mkv -vcodec copy original_video.h264
+remove_sei original_video.h264 new_video.h264
+ffmpeg -i new_video.h264 new_video.ts</code></pre>
+<p><!-- /wp:code --></p>
+<p><!-- wp:paragraph --></p>
+<p>If your compressed video uses B-frames, the last remuxing step will fail.<br>Indeed, most codecs, for video quality reason, allow out-of-order transmission of pictures ; And reconstructing the real picture order from the physical transmission order and the bitstream contents is hard ; it requires, once again, highly codec-specific work (non-shallow bitstream parsing and codec state simulation). This work could be made unnecessary be simply never dropping this ordering information between the demultiplexer/encoder and the downstream multiplexer.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This is exactly what FFmpeg does internally: each frame is a separate object, and holds this ordering information. By using an intermediate file, we just lost all of it, from the codec type to the picture sizes! The last invocation of FFmpeg has to reconstruct it again - and fails.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Towards an easier life for encapsulators</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>My conclusion is that codec specification should <em>not</em> attempt to specify a file format. I believe letting codecs define their file format is actually harming the industry, by making the multiplexers do the job of encoders</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>What we lack is an unified single-stream format for multiplexer inputs. A clear, codec-agnostic, and muxer-agnosting frontier between an encoder and a multiplexer. This mostly is a framing issue, which should, and will be handled by the container, in a codec-agnostic way.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>This format would make easy to delimit and reorder the top-level units of a bitstream in a codec-agnostic way. Multiplexers wouldn't have to dig into the codec internals to do their job, which fundamentally is a mostly codec-agnostic storage/transmission issue. As a bonus, such a format might also work very well as an output format for demultiplexers.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The MP4 file format was partly an attempt at reducing this problem ; single-stream MP4 files provide a way to separate the encapsulation stage from the actual multiplexing (data interleaving) stage.<br>Thus, a multiplexer could take single-stream MP4 files as inputs. There actually are encoders directly producing MP4 files (e.g the MPEG-H audio reference model). In this case, adding the support for a new codec to your software media pipeline is only a matter of plugging a new encoder and a new decoder. No modifications are needed anywhere else, especially not in the multiplexer.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Unfortunately, MP4, which tries to address a huge number of use cases, is more complicated alone than all of the above techniques put together.<br>Moreover, it is non-neutral from a political/ethical standpoint (MPEG committee, patents, etc.). These two points disqualifies it for an unified single-stream format.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Until we come up with the ultimate unified elementary stream format, what seems like the best fit is the IVF file format.  It's small, simple and easy to implement. (It was used for VP8, VP9, and also VP10 - which later became AV1 ; unfortunately, the AOM folks dropped it in favour of the OBU file format, which, by experience, does not make the job of the muxer easier).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p> <em>Note: this article was drafted in January 2019 by Sebastien Alaiwan. and published by Romain Bouqueau</em></p>
+<p><!-- /wp:paragraph --></p>

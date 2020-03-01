@@ -1,0 +1,218 @@
+---
+layout: post
+status: publish
+published: true
+title: 'A view on VP9 and AV1 part 2: important considerations'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 2118
+wordpress_url: http://www.gpac-licensing.com/?p=2118
+date: '2016-08-29 13:07:18 +0200'
+date_gmt: '2016-08-29 13:07:18 +0200'
+categories:
+- Technology
+- Experts Opinions
+tags: []
+comments:
+- id: 1323
+  author: Jamaika
+  author_email: edu@enu.eu
+  author_url: ''
+  date: '2016-09-01 06:46:07 +0200'
+  date_gmt: '2016-09-01 06:46:07 +0200'
+  content: "\"We like VP9 and AV1 for their simplicity, openness, and patent-free
+    approach. In the Part 1 of this article, we focused on the VP9/AV1 bitstream format.
+    We concluded that AV1 had the potential to compete with HEVC from a bitstream
+    format point of view but still contained a few serious issues.\"\r\nIn my opinion,
+    the conclusions too vague. What does it mean?\r\nIn forum doom9 Netflix presented
+    the results of Their large-scale study, Comparing X265 is x264 and VP9 (libvpx)
+    ...\r\nIt is appropriate to eliminate libvpx.\r\nhttps://www.youtube.com/watch?v=wi1B...utu.be&amp;t=1h25s\r\n\"Analyzers
+    (the Google VP9 decoder comes with a nice &lsquo;&ndash;enable-coeff-range-checking&rsquo;
+    configure option).\"\r\nNothing mentioned about the problem of decoding sRGB mode.
+    There was also described the \"test-16bit-internal\". What is it for?"
+- id: 1324
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-09-01 09:53:06 +0200'
+  date_gmt: '2016-09-01 09:53:06 +0200'
+  content: "The doom9 thread is detailed but it only covers the compression side.
+    But if you look at what happens with HEVC, the issue for large-scale deployments
+    is not related to compression. There are many aspects that are just not documented
+    and I wanted to list them. I also wanted to highlight VP9/AV1 codecs and use HEVC
+    (which is well more known) as a point of comparison. Our articles are definitely
+    not a quality comparison of codec implementations.\r\n\r\nFor the conclusion,
+    please read <a href=\"https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/\"
+    rel=\"nofollow\">Part 1</a> that describes the bitstream format and let me know
+    if I can clarify on some points. I made a full article on it because it is important
+    for conformance and transport which are subjects where the GPAC team shines.\r\n\r\nI
+    don't understand your question about sRGB, could you rephrase?"
+- id: 1325
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-09-01 09:53:17 +0200'
+  date_gmt: '2016-09-01 09:53:17 +0200'
+  content: "The doom9 thread is detailed but it only covers the compression side.
+    But if you look at what happens with HEVC, the issue for large-scale deployments
+    is not related to compression. There are many aspects that are just not documented
+    and I wanted to list them. I also wanted to highlight VP9/AV1 codecs and use HEVC
+    (which is well more known) as a point of comparison. Our articles are definitely
+    not a quality comparison of codec implementations.\r\n\r\nFor the conclusion,
+    please read <a href=\"https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/\"
+    rel=\"nofollow\">Part 1</a> that describes the bitstream format and let me know
+    if I can clarify on some points. I made a full article on it because it is important
+    for conformance and transport which are subjects where the GPAC team shines.\r\n\r\nI
+    don't understand your question about sRGB, could you rephrase?"
+- id: 1326
+  author: Jamaika
+  author_email: edu@enu.eu
+  author_url: ''
+  date: '2016-09-01 18:00:44 +0200'
+  date_gmt: '2016-09-01 18:00:44 +0200'
+  content: "He treats it as a loose conversation.\r\n\"Our articles are definitely
+    not a quality comparison of codec implementations.\"\r\nI understand. Plans GPAC
+    to implement codecs VPX / AV1?\r\nI don't know what the creators intended in codec
+    libvpx. What is the function and how do I use the color space sRGB?"
+- id: 1331
+  author: indolering
+  author_email: zachlym@indolering.com
+  author_url: ''
+  date: '2016-09-06 22:50:03 +0200'
+  date_gmt: '2016-09-06 22:50:03 +0200'
+  content: You state that "AV1 probably also makes use of important external patents."  This
+    assertion has been made about the VPx lineage going back to VP3 (which was the
+    basis for Theora).  Despite MPEG-LA throwing everything they could at VP8, the
+    most they got was a cross licensing deal from Google.  AV1 will receive even greater
+    scrutiny and have access to more patents than any VPx codec.  Given VPx's 15-year
+    track record, it is more likely that AV1 won't step on any external patents.
+- id: 1333
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-09-07 06:13:22 +0200'
+  date_gmt: '2016-09-07 06:13:22 +0200'
+  content: Thanks for your comment. The patent concern would deserve a few articles
+    to be covered. However the current HEVC patent issues (with patents being hold
+    outside of MPEG-LA or any running patent pool) is a real issue in my opinion.
+- id: 1336
+  author: Zach Lym
+  author_email: zachlym@indolering.com
+  author_url: http://indolering.com
+  date: '2016-09-09 21:47:05 +0200'
+  date_gmt: '2016-09-09 21:47:05 +0200'
+  content: "<blockquote> the current HEVC patent issues (with patents being hold outside
+    of MPEG-LA or any running patent pool) is a real issue in my opinion.\r\n\r\nNote
+    that the VP8 cross-licensing deal doesn't cover new encoding techniques used in
+    VP9, so why isn't MPEG-LA and HEVC going after Google?\r\n\r\nI can see trolls
+    saving their frivolous lawsuits to try and mar AV1's reputation, but hopefully
+    Google will either forge another cross-licensing deal or beat them in court.  Even
+    if they lost, wouldn't AV1 convert into a royalty bearing codec ... just like
+    H.26x?  Seriously, I'm asking!\r\n\r\nWith any luck, the technique would only
+    be used in a higher-level profile that can be disabled.  If it's a serious mess,
+    then AOM will rip out the offending technique and we will move onto AV1.1.  Even
+    if AV1 fails hard, AV2 will benefit from the legal vetting of AV1 and will avoid
+    the DCT patent thicket via lapped-transforms.\r\n\r\nSo yes, I agree with you
+    that patent trolling is a serious problem.  But your assertion that AV1 *probably*
+    steps on external patents doesn't square with history and seems like a very lazy
+    argument (friendly poke : )."
+- id: 1339
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-09-13 12:45:52 +0200'
+  date_gmt: '2016-09-13 12:45:52 +0200'
+  content: "<cite>AV1&rsquo;s reputation, but hopefully Google</cite>\r\n\r\nThat's
+    not only about Google and it makes things significantly more complex.\r\n\r\n<cite>will
+    either forge another cross-licensing deal or beat them in court.</cite>\r\n\r\nI
+    think that's what AOM is looking for. That's even more important than the codec
+    quality (so we may have to wait for AV2 or AV3 as you suggest, even if AOM obviously
+    markets otherwise).\r\n\r\n<cite>Even if they lost, wouldn&rsquo;t AV1 convert
+    into a royalty bearing codec &hellip; just like H.26x? Seriously, I&rsquo;m asking!</cite>\r\n\r\nIf
+    they fail to get an agreement for HEVC, how could they succeed for AV1?\r\n\r\n<cite>If
+    it&rsquo;s a serious mess, then AOM will rip out the offending technique and we
+    will move onto AV1.1</cite>\r\n\r\nYou cannot do that due to conformance issues.
+    That would make a new codec and chip vendors would lose millions."
+- id: 1340
+  author: Zach Lym
+  author_email: zachlym@indolering.com
+  author_url: http://indolering.com
+  date: '2016-09-14 01:25:15 +0200'
+  date_gmt: '2016-09-14 01:25:15 +0200'
+  content: "<blockquote>That&rsquo;s not only about Google and it makes things significantly
+    more complex.</blockquote>\r\n\r\nI would think that the pooled IP of the dozen
+    companies and their web of influence over purchasing decisions would give AOM
+    much greater bargaining power than Google had when they forced MPEG-LA into backing
+    down on their VP8 claims.\r\n\r\n<blockquote>I think that&rsquo;s what AOM is
+    looking for.</blockquote>\r\n\r\nYes, and their experience with VP3-VP9 indicate
+    that they will succeed.  Don't forget that Google has invested a quarter of a
+    billion dollars in codec development.\r\n\r\n<blockquote>If they fail to get an
+    agreement for HEVC, how could they succeed for AV1?</blockquote>\r\n\r\nWell,
+    no-one needed to for VP9 : )  But let's say a court finds that AV1 steps on a
+    single patent, is there any legal mechanism limiting the licensing fees?  Can
+    they charge more than what they are asking for another codec? \r\n\r\n<blockquote>
+    You cannot do that due to conformance issues. That would make a new codec and
+    chip vendors would lose millions. </blockquote>\r\n\r\nDepends on the patent and
+    the implementation.  But even on fixed-function hardware (if the cost of supporting
+    1.0 and 1.1 is minimal) streaming services could at least reduce their per-unit
+    licensing fees on nth generation units.\r\n\r\nSorry to drag this out, I am grateful
+    for your replies. I just don't think it's fair to characterize AV1's chances of
+    stepping on a patent as \"probable\" when VPx avoided it, especially with the
+    increased legal scrutiny and expanded the patent pool.\r\n\r\nI would love to
+    see an article with more in-depth discussion!"
+- id: 1583
+  author: johnny423
+  author_email: johnny423@gmail.com
+  author_url: ''
+  date: '2017-06-17 08:02:44 +0200'
+  date_gmt: '2017-06-17 08:02:44 +0200'
+  content: 'Interesting discussion (400+ comments) regarding Google ANS patent application
+    for AV1: https://www.reddit.com/r/programming/comments/6h08z5/google_is_currently_trying_to_patent_video/?sort=confidence'
+- id: 1584
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2017-06-18 13:34:49 +0200'
+  date_gmt: '2017-06-18 13:34:49 +0200'
+  content: Thanks for sharing.
+---
+<h1>A view on VP9 and AV1 part 2: important considerations</h1>
+<p><strong>Introduction</strong></p>
+<p>The success of a video coding standard depends on many factors.&nbsp;Many articles try to benchmark the performance of codec implementations or make comments about the ecosystem of codecs. But I have not seen any article&nbsp;about the <a href="https://www.gpac-licensing.com/2013/10/14/standard-cover-mpeg-dash-case-study/">standardization</a> process or the bitstream format.&nbsp;While the video quality is key, I&nbsp;believe the bitstream format is&nbsp;important too, but is probably less accessible or easy to communicate about.</p>
+<p>This is a two-part analysis. <a href=https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/>Part 1</a> compares the HEVC and VP9/AV1 codecs in the light of their bitstream formats. <a href="">Part 2 (this article)</a> will look at some other important considerations.</p>
+<p><strong>Video codecs: factors of success</strong></p>
+<p>The success of a codec is made of several components:</p>
+<ul>
+<li>Compression: the video quality at given bitrate constraints.</li>
+<li>Performance: how it compares to other codec&nbsp;implementations (in term of CPU versus quality/bitrate&nbsp;balance).</li>
+<li>A non-ambiguous specification. This requires many people to read it.</li>
+<li>Some tools to help editing better standards.</li>
+<li>A clear patent and royalty policy: of course free is better but&nbsp;innovation always comes at a cost.</li>
+<li>Simplicity to implement: too much complexity leads to&nbsp;incompatibilities and delays in implementations, and requires&nbsp;more hardware surface (hence increases the power&nbsp;consumption).</li>
+<li>Software implementations for both encoders and decoders.</li>
+<li>Room for hardware acceleration.</li>
+<li>Ability to embed in popular containers.</li>
+<li>Analyzers (the Google VP9 decoder comes with a nice &lsquo;&ndash;enable-coeff-range-checking&rsquo; configure option).</li>
+<li>Reference vectors (it seems that fuzzing with <a href="http://lcamtuf.coredump.cx/afl/">AFL</a> leads to&nbsp;more interesting vectors than what codec vendors provide).</li>
+<li>Competition with other codecs: having competitors helps get&nbsp;better.</li>
+</ul>
+<p><strong>Standardization and patents considerations</strong></p>
+<p>VP9 and AV1 bitstream formats are <a href="https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/">far simpler than AVC or HEVC but are also less mature</a>. That's a consequence of the development process: VP9 was done by one company, HEVC was standardized by a consortium via a lengthy process.</p>
+<p>In this process, many MPEG members were able to insert their patented feature. In that regards, the AV1 codec is important for the video ecosystem. The industry is poisoned by the current patent system which produces&nbsp;closed ecosystems, important fees and needlessly complex standards.&nbsp;AV1 is being backed by huge companies and patent holders. But AV1 probably also makes use of important external patents while being royalty-free. So it will be interesting to see if there will be lawsuits ;&nbsp;the results of these lawsuits may change the behavior&nbsp;of the industry.</p>
+<p><strong>Deployment consideration</strong></p>
+<p>For most managers, the video problem is considered&nbsp;solved and their solution is to take open-source projects such as FFmpeg, GPAC, MediaInfo and VLC to build a complete workflow. This analysis is premature&nbsp;in my opinion, even if many managers commonly share it. As a consequence, possible issues in VP9/AV1 are not taken seriously enough. If they were fixed, we would&nbsp;not be far from a convincing alternative to HEVC.</p>
+<p><strong>Conclusion</strong></p>
+<p>We like VP9 and AV1 for their simplicity, openness, and patent-free approach. In the <a href="https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/">Part 1 of this article</a>, we focused on the VP9/AV1 bitstream format. We concluded that AV1 had the potential to compete with HEVC from a bitstream format point of view but still contained a few serious issues.</p>
+<p>In this Part 2, we focused on several considerations other than quality and performance. Codecs should be evaluated with regards to their ecosystems and a strategic view: the failure of VP9 or AV1 is possible but would it be important for the AV1 supporting entities? Is this initiative a way to achieve other goals?</p>
+<p><strong>Links</strong></p>
+<ul>
+<li><a href="https://storage.googleapis.com/downloads.webmproject.org/docs/vp9/vp9-bitstream-specification-v0.6-20160331-draft.pdf">https://storage.googleapis.com/downloads.webmproject.org/docs/vp9/vp9-bitstream-specification-v0.6-20160331-draft.pdf</a></li>
+<li><a href="https://bloggeek.me/alliance-of-open-media-10-months/">https://bloggeek.me/alliance-of-open-media-10-months/</a></li>
+<li><a href="https://github.com/flaccidware/webm/issues/1031">https://github.com/flaccidware/webm/issues/1031</a></li>
+<li><a href="https://sonnati.wordpress.com/2016/06/03/does-vp9-deserve-attention-part-i/">https://sonnati.wordpress.com/2016/06/03/does-vp9-deserve-attention-part-i/</a> and&nbsp;<a href="https://sonnati.wordpress.com/2016/06/17/does-vp9-deserve-attention-part-ii/">https://sonnati.wordpress.com/2016/06/17/does-vp9-deserve-attention-part-ii/</a></li>
+</ul>

@@ -1,0 +1,81 @@
+---
+layout: post
+status: publish
+published: true
+title: An interview with StreamRoot, the company that makes popular video events flawless
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 1874
+wordpress_url: http://www.gpac-licensing.com/?p=1874
+date: '2015-03-21 14:41:23 +0100'
+date_gmt: '2015-03-21 14:41:23 +0100'
+categories:
+- Technology
+- GPAC industry use-cases
+tags: []
+comments: []
+---
+<h1>An interview with StreamRoot, the company that makes popular video events flawless</h1>
+<p><em>Featured Start-up!&nbsp;</em>This place is dedicated to support some interesting start-ups of our ecosystem. Most of them use the technologies that we designed or implemented. Feel free to contact them if you like what they do!&nbsp;If you are a start-up and wish to be featured, feel free to <a title="Contact" href="https://www.gpac-licensing.com/contact/">contact us</a>.</p>
+<p><br/></p>
+<p><strong>GPAC Licensing: Good morning Streamroot! For our readers, could you present your company in a few words?<br />
+</strong><br />
+<strong>Streamroot</strong>: we offer a solution for video streaming combining standard unicast delivery (e.g. CDN) and peer-to-peer (P2P) protocols. Our solution is based on HTML5 and WebRTC.</p>
+<p>We founded the company in 2013 in France, where we participated in the "Le Camping" accelerator program. We won several awards including the Troph&eacute;e Startups Num&eacute;rique and Hello Tomorrow Challenge. This past September, we headed across the pond to participate in the Boston Techstars fall 2014 season and have been in the US since.</p>
+<p>We&rsquo;re now headquartered in Boston to expand our customer base in the US and continue developing the product.</p>
+<p><br/></p>
+<p><strong>Can you tell us more about the P2P data delivery in your solution?</strong></p>
+<p>Data is delivered using WebRTC. This technology allows us to take advantage of the best of the Internet and web delivery protocols. It also allows the system to work without a plugin. The entire thing is entirely transparent to the viewer, the only thing (s)he notices is an improvement in the quality of the video!</p>
+<p>The video data itself is transported inside small encrypted chunks. Of course, we add a little of our own magic to balance the CDN and P2P components. Our goal is to offer the best user experience at the best price &ndash; and to eliminate once and for all the dreaded buffering experienced during the world&rsquo;s biggest live events!</p>
+<p><br/></p>
+<p><strong>How did you hear of GPAC?</strong></p>
+<p>Streamroot started as an academic project in our final year of engineering school. We wanted to build a peer-to-peer video player based on HTML5 technologies, and especially WebRTC, but didn&rsquo;t have much knowledge in the video field. We contacted Cyril Concolato and Jean Le Feuvre from Telecom ParisTech to better understand the latest video streaming technologies. That&rsquo;s how we heard about MPEG-DASH, and GPAC, the open-source library they created and maintained.</p>
+<p>GPAC was the first software that allowed us to generate MPEG-DASH manifests from mp4 files, and to build the first open-source HTML5 DASH player available on the market (called DASHR at the time), and it still is one of the best tools out there! Since then, we&rsquo;ve integrated GPAC into our testing workflow, and often suggest it to customers looking to convert their videos to MPEG-DASH format.</p>
+<p>More recently, we added support for DRM-protected content in our technology, and GPAC helped us generate video files using Common Encryption (CENC).</p>
+<p><br/></p>
+<p><strong>How do you see a collaboration in the future?</strong></p>
+<p>GPAC has one of the most qualified teams we know for video codecs, formats and delivery. We have great technical discussions with them, and are planning to collaborate on a joint R&amp;D project to further advance the state of peer-to-peer live streaming technology.</p>
+<p><br/></p>
+<p><strong>Hybrid P2P/CDN delivery looks like a breakthru. How is it like to discuss with existing actors?</strong></p>
+<p>Peer-to-peer got a bad rap in the past because it was associated with piracy websites. Copyright owners and their distributors used to very be conservative. Today this vision has changed. More and more companies use peer-to-peer because it has proven to be the most efficient way to distribute data over the Internet. Companies like Spotify and Microsoft embrace peer-to-peer delivery, and even Netflix is talking about enabling peer-to-peer video streaming on their platform.</p>
+<p>CDNs in particular acknowledge that P2P delivery will be crucial in the future to provide high quality streaming with great user experience. They know better than anyone else that data consumption is growing exponentially, and that the current internet infrastructure will not be able to handle the traffic in five years.</p>
+<p>The peer-to-peer solution is gaining traction with big broadcasters, and we&rsquo;ve recently signed with some big names!</p>
+<p><br/></p>
+<p><strong>If this is P2P, does it mean that the broadcaster looses control over the distribution?</strong></p>
+<p>Quite the opposite! Our module provides wealth of useful data from each viewer, which we aggregate and offer our customers in our monitoring dashboard. In addition to network and bandwidth metrics, we also gather quality of service metrics. Broadcasters can thus monitor their distribution in real time and &ldquo;see&rdquo; the positive effect of peer-to-peer distribution for their users.</p>
+<p>Furthermore, broadcasters can rest assured in terms of data security, as the peer-to-peer network is entirely controlled by our centralized tracker servers. These servers prevent any unauthorized access to the video streams through features such as domain restriction, geo-restriction and token authentication.</p>
+<p><br/></p>
+<p><strong>I want to work with you. How do we proceed?</strong></p>
+<p>Usually, the integration begins by the account registration on our Dashboard. This Dashboard will be your point of contact with Streamroot technology, either to manage your streams or get analytics about your streams. Once your account is created, you will access our integration documentation.</p>
+<p>If you use JW Player or Video.js, all you need to do then is to add three JS scripts in your web page containing your player, and that&rsquo;s it. The stream on your webpage will benefit from the Streamroot p2p module for all your users.</p>
+<p>If our clients have legacy delivering processes, we help them along the way to encode their videos into HLS or MPEG-DASH, often thanks to GPAC, and to configure their Media Server so as the Streamroot integration is very smooth and easy to perform.</p>
+<p><br/></p>
+<p><strong>Does it work in all browsers?</strong></p>
+<p>Streamroot can be used in Chrome, Firefox and Opera, and will be compatible with Internet Explorer this year. We are also working on mobile and smart TV, and have already had great success with Set-Top Boxes implementation!</p>
+<p><br/></p>
+<p><strong>How does your solution integrate with standard DRMs?</strong></p>
+<p>We developed our media engine on top of MSE and EME, so we have supported Common Encryption, Playready and Widewine DRMs in HTML5 since the beginning. We also have more classic support for AES encrypted HLS streams. And of course, all data shared over the peer-to-peer network is encrypted, so only authorized users can access the video content.</p>
+<p><br/></p>
+<p><strong>What is your business model?</strong></p>
+<p>We offer a SaaS model to online broadcasters: VoD, live, replay TV and other internet video platforms. Subscriptions are based on the amount of traffic transiting through our peer-to-peer network. The more traffic passes through our system, the more our customers save on bandwidth and the more we can improve the quality of service.</p>
+<p><br/></p>
+<p><strong>Can you give use figures?</strong></p>
+<p>We&rsquo;ve recently partnered with several VoD and live streaming platforms to test our solution on videos with several thousand simultaneous viewers.</p>
+<p>For example, with a VoD platform, we achieved nearly 60% peering with percentages rising at peak use times. On a live stream of a soccer game, we recently achieved between 40 and 50% peering and download speeds that topped off at over 2Mbps. This test also allowed us to confirm the power of our network algorithms to intelligently select and connect viewers, as the average distance between peers dropped significantly as audience numbers rose.</p>
+<p>More specific information and data can be found in our two white papers, available on the website. And stay tuned for more updates &ndash; we&rsquo;re currently launching production with several companies!</p>
+<p><br/></p>
+<p><strong>What are your challenges?</strong></p>
+<p>We have succeeded in proving the effectiveness of our technology on significant real-world use cases and pilot customers. Today, one of our biggest challenges &ndash; and opportunities &ndash; is to scale the solution to the world&rsquo;s biggest streaming events such as the Super Bowl or World Cup, and to continue extending our support across different platforms and devices. We hope to see Streamroot in every modern computer, TV and set-top box in a few years!</p>
+<p><br/></p>
+<p><strong>Where can we find more information?</strong></p>
+<p>Check out our <a href="http://www.streamroot.io/">website</a>, where you can find our white papers on VoD and live streaming. You can also have a look at our <a href="http://blog.streamroot.io/">blog</a>, where we recently did a series about DASH encoding. Or simply drop us a line at <a href="mailto:contact@streamroot.io">contact@streamroot.io</a>.</p>
+<p>And for those heading to Vegas in April, we&rsquo;ll be at NAB Show, Upper South Hall, Booth SU 6314 ! <a href="http://www.streamroot.io/nab">http://www.streamroot.io/nab</a>!</p>
+<p><br/></p>
+<p><strong>Streamroot</strong>: Thanks for inviting us.</p>
+<p><strong>GPAC Licensing</strong>: Thank you.</p>
+<p><br/></p>

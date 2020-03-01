@@ -1,0 +1,233 @@
+---
+layout: post
+status: publish
+published: true
+title: Diving into ultra-low latency for live using MPEG-DASH
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 566
+wordpress_url: http://www.gpac-licensing.com/?p=566
+date: '2014-07-09 18:24:10 +0200'
+date_gmt: '2014-07-09 18:24:10 +0200'
+categories:
+- GPAC Open-Source
+- GPAC Licensing
+- Technology
+- Experts Opinions
+tags: []
+comments:
+- id: 348
+  author: Diving into ultra-low latency for live using MP...
+  author_email: ''
+  author_url: http://www.scoop.it/t/video-ecosystem/p/4024646617/2014/07/15/diving-into-ultra-low-latency-for-live-using-mpeg-dash-gpac-licensing
+  date: '2014-07-15 09:52:00 +0200'
+  date_gmt: '2014-07-15 09:52:00 +0200'
+  content: "[&#8230;] Low latency with HTTP-streaming (segment-based) technologies
+    is a challenge. In particular MPEG-DASH is gaining adoption among international
+    industry consortiums such as DVB with DVB DASH or ETSI with HbbTV 2.0 &hellip;&nbsp;
+    [&#8230;]"
+- id: 349
+  author: Diving into ultra-low latency for live streamin...
+  author_email: ''
+  author_url: http://www.scoop.it/t/windows-phone-by-guillaume-de-lafontaine/p/4024650311/2014/07/15/diving-into-ultra-low-latency-for-live-streaming-using-mpeg-dash-gpac-licensing
+  date: '2014-07-15 11:02:57 +0200'
+  date_gmt: '2014-07-15 11:02:57 +0200'
+  content: "[&#8230;] Low latency with HTTP-streaming (segment-based) technologies
+    is a challenge. In particular MPEG-DASH is gaining adoption among international
+    industry consortiums such as DVB with DVB DASH or ETSI with HbbTV 2.0 (not published
+    yet), with a growing focus on live use-cases. For such applications, latency is
+    a concern.In this article, we will show you how the GPAC team studied the impact
+    on the overhead of HD streaming with very low latency using MPEG-DASH and demonstrated
+    that overhead on the transport side is negligible, in the order of 1%. At 1% overhead,
+    we could demonstrate a 240ms latency. With such a low latency, interactive or
+    bidirectional applications such as video conferencing or live streaming with voting
+    become possible.Of course such low latency can only be safely reproduced in local
+    network conditions. Yet it shows that the latency is not due to the MPEG-DASH
+    technology but rather to the network conditions. It also shows that a few technical
+    choices can dramatically reduce the latency.All the tools used for this demonstration
+    are available as free software. Feel free to try and contact us if you have any
+    questions. (...)&nbsp; [&#8230;]"
+- id: 1529
+  author: David
+  author_email: dvboghen@hotmail.com
+  author_url: http://umediaserver.net/umediaserver/index.html
+  date: '2017-04-09 00:54:07 +0200'
+  date_gmt: '2017-04-09 00:54:07 +0200'
+  content: 'The 240ms latency that this team has achieved is not going to be stable
+    with this method of fetching mp4 fragments - separate http request for each fragment.
+    It''s going to grow as network conditions fluctuate. Besides, a server needs to
+    serve 5-10 http requests per second for each player. Normally, each http request
+    involves opening a socket and tcp handshake; things are even more expensive for
+    https connection. So handling a single player will be quite expensive and you
+    can forget about serving hundreds of concurrent players with the proposed approach.
+    You really need to abandon MPEG-DASH and start to fetch segments using a websocket
+    - so you establish a connection once to the server and fragments start to stream
+    over that connection. We have done this for Unreal Media Server and you can experience
+    stable 200-500ms latency with Chrome browser (key-frame frequency needs to be
+    1 sec and there will be some bandwidth penalties because of mp4 header overhead
+    for each fragment. Demo streams: http://umediaserver.net/umediaserver/demos.html'
+- id: 1530
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2017-04-09 12:33:05 +0200'
+  date_gmt: '2017-04-09 12:33:05 +0200'
+  content: "Hi David,\r\n\r\nThank you for your answer and congratulations for your
+    software. This article is now almost 3 years old and it keeps being popular. Any
+    update or comment is still warmly welcome.\r\n\r\nThe 240 ms latency has now been
+    demonstrated down to 40ms using a standard video encoding pattern. I think the
+    GDR encoding, which is very useful for live video chat, is neither common nor
+    useful for most applications.\r\n\r\nNetwork stability is indeed not covered in
+    the article. We wanted this open-source and reproducible by anyone). Fluctuations
+    require some buffering. Using CDNs like Akamai we reached some sub-second latency
+    (read more at https://www.gpac-licensing.com/2017/04/07/meet-team-behind-signals-nab-2017/
+    and https://twitter.com/NicolasWeil/status/842664233577922560 - we can meet at
+    NAB if you come).\r\n\r\nAbout HTTP the GPAC player (MP4Client) uses persistent
+    connections (https://en.wikipedia.org/wiki/HTTP_persistent_connection). We don't
+    have the problems you mention. You raise an important point because that relies
+    mostly on the players and we need to optimize them. On local networks, where media
+    servers can serve content directly, WebSockets are a nice option.\r\n\r\nAbout
+    leaving MPEG-DASH, the open-source and commercial Mist media server (https://mistserver.org)
+    is able to serve multi-rate fragmented MP4 with a similar approach as you described.
+    They support bandwidth adaptation on server-side. Go see them at a trade show
+    if you haven't already!\r\n\r\nRomain"
+- id: 1701
+  author: Matt
+  author_email: wedgef5@gmail.com
+  author_url: ''
+  date: '2018-01-18 19:16:29 +0100'
+  date_gmt: '2018-01-18 19:16:29 +0100'
+  content: "I'm trying to use the information presented here and in the white paper
+    to achieve low latency in an MPEG-DASH stream rendered in a browser using dash.js.
+    \ I'm not even really looking to get as low as mentioned here, but something down
+    around 1s.  So far, I'm still at about 6s, which is too much.\r\n\r\nHas anyone
+    managed to accomplish low latency using a JS client?"
+- id: 1702
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2018-01-18 21:01:08 +0100'
+  date_gmt: '2018-01-18 21:01:08 +0100'
+  content: "Hi Matt,\r\n\r\nWe could achieve 1.5s including the CDN: https://twitter.com/GPACLicensing/status/909498076259389440\r\n\r\nPlease
+    use our contact form to reach us!\r\n\r\nBest"
+- id: 1768
+  author: TN
+  author_email: nowerzt@gmail.com
+  author_url: ''
+  date: '2018-05-11 07:15:08 +0200'
+  date_gmt: '2018-05-11 07:15:08 +0200'
+  content: Could you please share the detail about how to reach the 40ms latency using
+    a standard video encoding pattern?
+- id: 1769
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2018-05-11 14:06:40 +0200'
+  date_gmt: '2018-05-11 14:06:40 +0200'
+  content: |-
+    The player start-up time depends on the video encoding pattern. However the latency doesn't. This is a common misconception.
+
+    Think this low latency stream like a traditional TV signal. When you start you compute the time of your live point. Then you find the corresponding segment, starts downloading (and decoding) at (or until) your live point. Your HTTP connection will deliver you the content frame by frame using the "chunk" mechanism.
+
+    Let me know if you have any additional questions.
+- id: 1771
+  author: TN
+  author_email: nowerzt@gmail.com
+  author_url: ''
+  date: '2018-05-15 01:57:34 +0200'
+  date_gmt: '2018-05-15 01:57:34 +0200'
+  content: "Thanks Romain.\r\nI have two questions. First is what&lsquo;s the advantage
+    of chunk transfer encoding compare to http range request? As I known, http range
+    request can also fetch the part of segment, that be called fragment.\r\nThe Second
+    question is, Reference you above reply yo David, 'The 240 ms latency has now been
+    demonstrated down to 40ms using a standard video encoding pattern. I think the
+    GDR encoding, which is very useful for live video chat, is neither common nor
+    useful for most applications.' So the 40ms latency is the end-to-end latency which
+    mainly depends on chunk length, and is nothing with video encoding pattern. And
+    what is your player start-up time and the corresponding video encoding pattern?
+    Does the GDR play the key role in the video encoding pattern?"
+- id: 1772
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2018-05-15 08:14:29 +0200'
+  date_gmt: '2018-05-15 08:14:29 +0200'
+  content: "> what&lsquo;s the advantage of chunk transfer encoding compare to http
+    range request?\r\n\r\nThese are not the same.\r\n\r\n\"HTTP range request\" requires
+    you to know which bytes you need in the stream. So it is not relevant for lowering
+    the latency (rather to download only the necessary media data).\r\n\r\n\"Chunked
+    transfer encoding\" combined with a persistent connection allows to push data
+    in a broadcast manner.\r\n\r\n> So the 40ms latency is the end-to-end latency
+    which mainly depends on chunk length, and is nothing with video encoding pattern.\r\n\r\nCorrect.\r\n\r\n>
+    And what is your player start-up time and the corresponding video encoding pattern?
+    Does the GDR play the key role in the video encoding pattern?\r\n\r\nAll the figures
+    are in the research paper and can be reproduced with the open-source GPAC player.\r\n\r\nThe
+    GDR reduces the startup time to a predictable value ; it doesn't reduce the latency.\r\n\r\nI
+    think the paper could have been better written on some aspects but remember the
+    authors made these experiments 5 years ago already. This is now in production
+    with GPAC Licensing."
+- id: 1776
+  author: TN
+  author_email: nowerzt@gmail.com
+  author_url: ''
+  date: '2018-05-17 08:09:11 +0200'
+  date_gmt: '2018-05-17 08:09:11 +0200'
+  content: "Thanks Romain for the wonderful explanation.\r\nI also want to know is
+    there any research about VR tiled streaming with GPAC Licensing? The low latency
+    dash live makes helps, but can't reduce the motion-to-high-resolution latency."
+- id: 1777
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2018-05-17 15:43:24 +0200'
+  date_gmt: '2018-05-17 15:43:24 +0200'
+  content: "The GPAC open-source project indeed contains VR Tiled Streaming developments:
+    https://www.google.fr/search?q=gpac+tiling. GPAC Licensing is the commercial arm
+    of GPAC.\r\n\r\nThis research article from 2013 tries to optimize many parameters
+    at the same time. It may reduce the readability for most readers.\r\n\r\nIMO the
+    motion-to-high-resolution latency is an orthogonal problem. Its resolution is
+    not related to transport but either to fast-decode tiles DASH Representations
+    and player optimizations."
+- id: 5183
+  author: Our journey in low latency OTT (DASH, HLS) - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2019/03/29/our-journey-in-low-latency-ott/
+  date: '2019-03-29 10:23:33 +0100'
+  date_gmt: '2019-03-29 10:23:33 +0100'
+  content: "[&#8230;] (accepted at IEEE) with an open-source implementation. GPAC
+    Licensing presents the results as a blog article (astonishingly still the most
+    popular content of our website to this [&#8230;]"
+---
+<h1>Diving into ultra-low latency for live using MPEG-DASH</h1>
+<p><strong>Low latency with HTTP-streaming (segment-based) technologies is a challenge</strong>. In particular MPEG-DASH is gaining adoption among international industry consortiums such as DVB with <a href="https://www.dvb.org/resources/public/standards/a168_dvb-dash.pdf">DVB DASH</a> or ETSI with HbbTV 2.0 (not published yet), with a growing focus on live use-cases.&nbsp;For such applications, latency is a concern.</p>
+<p>In this article, we will show you how<strong> <a href="http://gpac.io/about/">the GPAC team</a>&nbsp;studied the impact on the overhead of HD streaming with very low latency using MPEG-DASH</strong> and demonstrated that overhead on the transport side is negligible, in the order of 1%. At 1% overhead, we could demonstrate a 240ms latency. With such a low latency, interactive or bidirectional applications such as video conferencing or live streaming with voting become possible.</p>
+<p>Of course such low latency can only be safely reproduced in local network conditions. Yet it shows that the latency is not due to the MPEG-DASH technology but rather to the network conditions. It also shows that a few technical choices can dramatically reduce the latency.</p>
+<p>All the tools used for this demonstration are available as&nbsp;<a href="http://gpac.io">free software</a>. Feel free to try and <a title="Contact" href="https://www.gpac-licensing.com/contact/">contact us</a> if you have any questions.</p>
+<p><strong>Sources of latency</strong></p>
+<p>Here is a list of latency sources at the client side:</p>
+<ol>
+<li><strong>The video encoding</strong>: traditional encodings rely on a pattern of encoding with Random Access Points (RAP). While this pattern is very bitrate-efficient, it creates a variable latency from 0 frame (if the first retrieved frame is a RAP) to the length of the GoP (if the first retrieved frame just follows a RAP).</li>
+<li><strong>The segment caching and buffering</strong>: most players buffer many segments (or seconds of data depending on the buffering policy). For example <a href="https://twitter.com/rbouqueau/status/468279192853835777">the Apple HLS implementation adds at least 10 seconds of buffering</a> at this stage.</li>
+<li><strong>MPEG-DASH parameters</strong>: most parameters are not tuned at all. The presence of intermediary entities such as CDNs, which do not yet rewrite MPEG-DASH manifests to reflect the latency added by caching servers, forces content generator to add latency. This has another unwanted consequence: some players are aware that the signalled buffering is probably excessive and act aggressively by retrieving segments in advance. This can lead to starvation and an unpleasant experience for the watcher.</li>
+</ol>
+<p><strong>Solutions</strong></p>
+<p>The <a href="http://biblio.telecom-paristech.fr/cgi-bin/download.cgi?id=14719">article</a> takes advantages of several mechanisms to address the concerns exposed above:</p>
+<ol>
+<li><strong>The video encoding</strong>:&nbsp;H264 Gradual Decoding Refresh (GDR). GDR allows the intra-refreshing process to occur regularly over a constant number of frames. Said clearly: when you start decoding, you know how many frames you need to decode before getting a fully-decodable image, and this number is constant. Thus the latency is constant. The <a href="http://www.videolan.org/developers/x264.html">x264 free software encoder</a> has supported this feature for years, and certified decoders also do. The bitrate overhead of such a choice is estimated to 13% for HD content, 30% for CIF content. The lower the latency, the more overhead.</li>
+<li><strong>The segment caching and buffering</strong>: first the player should be able to use segments before they are entirely downloaded. This is made possible using HTTP 1.1 chunk transfers to get the smallest valid part of an ISOBMF/MP4 file, called a <em>fragment</em>. Previously the&nbsp;client had no knowledge of how segments were produced and sent requests&nbsp;only when entire segments had been generated. Now with a proper download strategy, the latency only depends on the duration of the HTTP chunks (i.e. doesn't depend on the segment duration anymore).&nbsp;The overhead for HTTP and the aggressive use of fragments is detailed in the article.</li>
+<li><strong>Optimizations of some DASH MPD attributes</strong>: <em>availabilityStartTime</em> and&nbsp;<em>minBufferTime</em>.
+<ul>
+<li><em>availabilityStartTime</em> contains the UTC time at which data is ready to be processed. The GPAC team advocated for a new&nbsp;<em>availabilityStartTimeOffset</em> attribute (which became available as&nbsp;<em>availabilityTimeOffset</em> and <em>availabilityTimeComplete&nbsp;</em>in the second edition of the&nbsp;DASH standard). This allows to take advantage of the smaller <em>fragments</em> entities of ISOBMF and gets a smaller granularity compared to segments.</li>
+<li><em>minBufferTime&nbsp;</em>is the DASH client buffer. It should be adjusted depending on the network conditions. The structure of the Internet makes it difficult to evaluate this value when generating the DASH content since it depends on network metrics which are unique for each user. The Internet also suffers from "jitter", the deviation around a mean latency which forces to increase the buffer size. While the Internet offers no guarantee on video delivery, legacy broadcast networks (terrestrial, satellite, ...) also have theirs. And it is up to intermediates which deliver the content to handle this value properly.</li>
+</ul>
+</li>
+</ol>
+<p>Note: the latency and jitter of the Internet have led video industry actors to pay ISP to have better network conditions. This has been recently the case <a href="http://www.nytimes.com/2014/02/24/business/media/comcast-and-netflix-reach-a-streaming-agreement.html">between Netflix and Comcast</a>. This has raised concerns about<a href="http://www.wired.com/2014/06/net_neutrality_missing/">Net Neutrality</a> but that's beyond this article's scope. What is interesting is that this mechanism is similar to what happens with IPTV: IPTV benefits from dedicated links from the network providers.</p>
+<p><strong>To go further</strong></p>
+<p>By tuning these parameters, the authors showed experimentally that it is possible to achieve a latency&nbsp;below 6 frames (240ms at 25 frames per second). The overhead is around 1% on the transport side, and 13% on the encoding side for HD content. The experiments were conducted using the <a href="http://gpac.io">GPAC open-source tools</a>.</p>
+<p>This article is an explanation about <a href="http://biblio.telecom-paristech.fr/cgi-bin/download.cgi?id=14719">this research article</a> published by the researchers from the GPAC Team at Telecom ParisTech. The article contains all the data to reproduce the experiments and figures cited in this article. If you have any questions, please feel free to contact the authors.</p>

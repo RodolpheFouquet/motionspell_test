@@ -1,0 +1,129 @@
+---
+layout: post
+status: publish
+published: true
+title: Our journey in low latency OTT (DASH, HLS)
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 2462
+wordpress_url: https://www.gpac-licensing.com/?p=2462
+date: '2019-03-29 10:22:53 +0100'
+date_gmt: '2019-03-29 10:22:53 +0100'
+categories:
+- Technology
+- Experts Opinions
+- GPAC industry use-cases
+tags: []
+comments:
+- id: 5700
+  author: Wind in the sails of MPEG - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2019/06/03/wind-in-the-sails-of-mpeg/
+  date: '2019-06-03 13:11:01 +0200'
+  date_gmt: '2019-06-03 13:11:01 +0200'
+  content: "[&#8230;] Our journey in low latency OTT (DASH, HLS) [&#8230;]"
+- id: 5994
+  author: What prevents new Netflix-es to emerge - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2019/08/26/what-prevents-new-netflix-es-to-emerge/
+  date: '2019-09-12 09:34:43 +0200'
+  date_gmt: '2019-09-12 09:34:43 +0200'
+  content: "[&#8230;] on the quality of experience (QoE) and the providers on metrics
+    including quality, rebuffering, or latency (QoS) where broadcast offered a better
+    service. Now that sport leagues can address their viewers [&#8230;]"
+---
+<p><!-- wp:heading --></p>
+<h1>Our journey in low latency OTT (DASH, HLS)</h1>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:core-embed/twitter {"url":"https://twitter.com/NicolasWeil/status/859745952659369984","type":"rich","providerNameSlug":"twitter","className":""} --></p>
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter">
+<div class="wp-block-embed__wrapper">
+https://twitter.com/NicolasWeil/status/859745952659369984
+</div>
+</figure>
+<p><!-- /wp:core-embed/twitter --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Introduction</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Low latency discussions in the professional video industry are everywhere and nowhere. Everywhere because the public and the professionals have embraced this cause. Nowhere because what could have been a breakthrough innovation is now a slow pace evolution.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>A missed opportunity for a deep change</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The innovation could have allowed to modify deeply the structure of the video delivery over the Internet. We need these modifications because we could spare a lot of bytes and money by simply using the right transport stack:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:core-embed/twitter {"url":"https://twitter.com/rbouqueau/status/1110119858165948419","type":"rich","providerNameSlug":"twitter","className":""} --></p>
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter">
+<div class="wp-block-embed__wrapper">
+https://twitter.com/rbouqueau/status/1110119858165948419
+</div>
+</figure>
+<p><!-- /wp:core-embed/twitter --></p>
+<p><!-- wp:paragraph --></p>
+<p>Analysts and blog posts see technical threats in low latency OTT, especially on buffering issues. But they are happy to see <a href="https://www.zixi.com/">Zixi</a>, <a href="https://www.srtalliance.org/">SRT</a> or <a href="http://www.videoservicesforum.org/RIST.shtml">RIST</a> emerge for contribution over the Internet. These are two sides of the same coin but people don't realize it. Instead our latest surveys show that media customers don't want to put money in low latency: the value/risk balance doesn't look good enough for managers to take any decision.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Of course video has many other uses (surgery, video surveillance, live quizzes, auctions, ...) that benefits from these advances. But these are slower markets which don't have the same impact on the Internet.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>PS 2019/06/19: following remarks on social networks we have added a <a href="https://www.gpac-licensing.com/2019/06/17/three-sources-of-latency/">detailed dedicated article about the technical sources of latency</a>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>Timeline</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2010, September: The GPAC team joins the MPEG-DASH forces. We implemented <a href="http://gpac.io">DASH</a> packaging in our superstar MP4Box packager.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2010, October:  Our implementation is reported as a <a href="http://biblio.telecom-paristech.fr/cgi-bin/display.cgi?id=11653">MPEG contribution</a> (<a href="http://biblio.telecom-paristech.fr/cgi-bin/selectresult.cgi?tmpl=public&amp;searchtype=1&amp;authortosearch=Concolato+Le+Feuvre+Bouqueau+Dufourd&amp;wordtosearch=&amp;searchlang=&amp;pubtype=standardisation&amp;state=submitted&amp;state=toappear&amp;state=published&amp;state=unpublished&amp;initMonth=&amp;initYear=&amp;endMonth=&amp;endYear=&amp;year=&amp;order=date&amp;page=1&amp;html=Display+the+selection">our 500+ contributions</a>). Our next contributions then would be toward metrics (including latency), testing, and keeping things simple.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2010, November: GPAC releases the first MPEG-DASH player. Both player and packager are open-source. See this <a href="https://blog.eltrovemo.com/dash_timeline/">excellent timeline by Nicolas Weil if you like to dig more into our industry's history</a>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2012, February: We release our entire <a href="http://gpac.io/2012/02/23/dash-sequences/">MPEG-DASH dataset</a> as open to anyone. The traffic has been massive and we found no industry support.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2012, March: We give the first training on MPEG-DASH at DTS headquarters in Calabasas, CA. This is a first of a series of trainings that would finance our R&amp;D efforts. The focus of our customers was on latency and we helped them reduce it.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2013, April: GPAC releases an experimental live DASH audio/video encoder called Dashcast. The tool became very popular but due to maintenance concerns our professional customers were told to use GPAC Licensing DashcastX, a replacement using <a href="http://www.gpac-licensing.com/signals/">Signals</a>. Reducing latency became a reachable technological objective.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2013, December: GPAC Licensing signs a contract with DASH-IF to <a href="https://www.gpac-licensing.com/2014/08/21/ibc-2014-dash-avc264-support-in-gpac/">ensure their profiles implementation</a>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2014, July: The GPAC team releases the <a href="http://biblio.telecom-paristech.fr/cgi-bin/download.cgi?id=14719">first low latency OTT research article</a> (<a href="https://ieeexplore.ieee.org/document/6878732">accepted at IEEE</a>) with an open-source implementation. GPAC Licensing presents the results as a <a href="https://www.gpac-licensing.com/2014/07/09/lowering-dash-live-latency-240ms/">blog article</a> (astonishingly still the most popular content of our website to this day).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2015, March: to simplify experiments, Cyril Concolato releases a node.js implementation of a <a href="https://github.com/gpac/node-gpac-dash">low latency HTTP server</a>.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2015, August: <a href="https://gpac.wp.imt.fr/2015/08/19/announcing-mp4box-js/">presenting MP4Box.js</a> to experiment with MP4 within the browser in a consistent way. This tool lowered drastically the latency of Web-based playback by controlling most of the media stack.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>2016, January: with the coordination of Nicolas Weil, Akamai is the first CDN to accept low latency deployments.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:core-embed/twitter {"url":"https://twitter.com/NicolasWeil/status/842838584944181249","type":"rich","providerNameSlug":"twitter","className":""} --></p>
+<figure class="wp-block-embed-twitter wp-block-embed is-type-rich is-provider-twitter">
+<div class="wp-block-embed__wrapper">
+https://twitter.com/NicolasWeil/status/842838584944181249
+</div>
+</figure>
+<p><!-- /wp:core-embed/twitter --></p>
+<p><!-- wp:paragraph --></p>
+<p>2017, February: we cover the <a href="https://en.wikipedia.org/wiki/Super_Bowl_LI">SuperBowl finals</a> to some selected viewers as part of a deal with CDN. The results show that a CDN need to charge around 15% more to deliver properly low latency content.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><strong>References</strong></p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p><a href="https://www.gpac-licensing.com/2014/07/09/lowering-dash-live-latency-240ms/">Technical details from the 2014 article</a> are available here. Please <a href="https://www.gpac-licensing.com/contact/">contact us</a> if you wish to experiment with the latest version.<br></p>
+<p><!-- /wp:paragraph --></p>

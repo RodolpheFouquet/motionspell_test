@@ -1,0 +1,182 @@
+---
+layout: post
+status: publish
+published: true
+title: "[IBC 2014] DASH AVC/264 support in GPAC"
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 1266
+wordpress_url: http://www.gpac-licensing.com/?p=1266
+date: '2014-08-21 16:54:20 +0200'
+date_gmt: '2014-08-21 16:54:20 +0200'
+categories:
+- GPAC Open-Source
+- GPAC Licensing
+tags: []
+comments:
+- id: 383
+  author: "[IBC2014] DASH AVC/264 support in GPAC - GPAC L..."
+  author_email: ''
+  author_url: http://www.scoop.it/t/webcasting/p/4028606791/2014/09/24/ibc2014-dash-avc-264-support-in-gpac-gpac-licensing
+  date: '2014-09-24 09:54:40 +0200'
+  date_gmt: '2014-09-24 09:54:40 +0200'
+  content: "[&#8230;] Thanks to a joint effort of GPAC Licensing, EBU and DASH-IF,
+    the open-source multimedia framework GPAC now has support for the DASH Industry
+    Forum DASH AVC/264 profile&hellip; and beyond! In this article we are going show
+    you how to setup GPAC for your OnDemand and Live contents. In a next article,
+    we&rsquo;ll see how to use GPAC to encrypt your data with support with the most
+    common DRMs.&nbsp; [&#8230;]"
+- id: 5182
+  author: Our journey in low latency OTT (DASH, HLS) - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2019/03/29/our-journey-in-low-latency-ott/
+  date: '2019-03-29 10:23:08 +0100'
+  date_gmt: '2019-03-29 10:23:08 +0100'
+  content: "[&#8230;] 2013, December: GPAC Licensing signs a contract with DASH-IF
+    to ensure their profiles implementation. [&#8230;]"
+---
+<p><a href="https://www.gpac-licensing.com/wp-content/uploads/2014/08/banniere_EBU_ASHIF.jpg"><img class="alignnone size-full wp-image-609" src="https://www.gpac-licensing.com/wp-content/uploads/2014/08/banniere_EBU_ASHIF.jpg" alt="banniere_EBU_ASHIF" width="870" height="120" /></a></p>
+<h1>[IBC 2014] DASH AVC/264 support in GPAC</h1>
+<p>Thanks to a joint effort of <a href="https://www.gpac-licensing.com">GPAC Licensing</a>, <a href="http://www.ebu.ch">EBU</a> and <a href="http://dashif.org/">DASH-IF</a>, the open-source multimedia framework GPAC now has support for the DASH Industry Forum DASH AVC/264 profile... and beyond!</p>
+<p>In this article we are going show you how to setup GPAC for your OnDemand and Live contents.&nbsp;In a next article, we'll see how to use GPAC to encrypt your data with support with the most common DRMs.</p>
+<p>For lunch today:</p>
+<ul>
+<li><a href="#profile">DASH AVC/264 profile</a></li>
+<li><a href="#dashjs">dash.js HTML5 player</a></li>
+<li><a href="#ebuio">EBU.io open platform&nbsp;demonstrated live at IBC 2014</a></li>
+<li><a href="#mp4box">MP4Box command-lines</a></li>
+<li><a href="#dashcast">DashCast&nbsp;command-lines</a></li>
+<li><a href="#drm">Current limitations and DRMs</a></li>
+<li><a href="#support">Support</a></li>
+<li><a href="#links">Links</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong><a id="profile" style="color: #fff;"></a>DASH AVC/264 profile</strong></p>
+<p>When the MPEG-DASH standard (<a href="http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip">latest version</a>) was released, it was still <a title="What is a standard and what does it cover? (featuring a MPEG-DASH case study)" href="https://www.gpac-licensing.com/2013/10/14/standard-cover-mpeg-dash-case-study/">a wide standard</a>. A DASH Promoter Group has rapidly emerged to emit a set of good practices. The DASH Industry Forum was born and has yet emitted <a href="http://dashif.org/white-papers/">several documents</a>. The most important papers here are the recommendations and interoperability points.</p>
+<p>If you don't know yet about MPEG-DASH, I advise you this <a href="http://www.streamingmediaglobal.com/Articles/ReadArticle.aspx?ArticleID=93275">excellent article</a> from Christian Timmerer. Click <a href="http://blog.eltrovemo.com/1218/mpeg-dash-ecosystem-status/">here</a> for a state of the available products from Nicolas Weil.</p>
+<p>Here is a summary of the tools available in the DASH AVC/264 profile from the DASH-IF:</p>
+<p>[caption id="attachment_592" align="alignnone" width="480"]<a href="https://www.gpac-licensing.com/wp-content/uploads/2014/08/20140816_DASH-IF_profile.jpg"><img class=" wp-image-592" src="https://www.gpac-licensing.com/wp-content/uploads/2014/08/20140816_DASH-IF_profile.jpg" alt="20140816_DASH-IF_profile" width="480" height="360" /></a> Slide 17 from http://dashif.org/w/2013/06/DASH264-v1.5.pdf[/caption]</p>
+<p>You can know more about the DASH AVC/264 profile at:</p>
+<ul>
+<li><a href="http://dashif.org/w/2013/06/DASH264-v1.5.pdf">http://dashif.org/w/2013/06/DASH264-v1.5.pdf</a></li>
+<li><a href="http://dashif.org/w/2013/06/DASH-AVC-264-base-v1.03.pdf">http://dashif.org/w/2013/06/DASH-AVC-264-base-v1.03.pdf</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong><a id="dashjs" style="color: #fff;"></a>dash.js HTML5 player</strong></p>
+<p>The DASH-IF forum also launched a community effort to build a web player for MPEG-DASH. It relies on HTML5 Media Extensions such as MSE (Media Source Extensions). Some other extensions or other projects may be used in the future like HTML5 EME for encryption (register to our <a href="https://www.gpac-licensing.com/newsletter">mailing-list</a> to know more about how it coordinates with DRMs), Mozilla <a href="https://github.com/mozilla/popcorn-js/tree/master/parsers/parserTTML">Popcorn for the TTML</a> subtitling support, or <a href="https://github.com/gpac/mp4box.js">mp4box.js</a> for ISOBMF demuxing. The player code is available on <a href="https://github.com/Dash-Industry-Forum/dash.js">github</a>.</p>
+<p>&nbsp;</p>
+<p><strong><a id="ebuio" style="color: #fff;"></a>EBU.io open platform demonstrated live at IBC 2014</strong></p>
+<p>GPAC Licensing and DASH-IF have a partnership with EBU to build an open platform around standards:</p>
+<p>[caption id="" align="alignnone" width="480"]<img src="https://pbs.twimg.com/media/BjuJdP3CAAAfEg5.jpg" alt="" width="480" height="270" /> Bram Tullemans from EBU presenting the EBU.io open platform. Photo from Nicolas Weil (https://twitter.com/NicolasWeil/status/449103723411668992)[/caption]</p>
+<p>The first private beta was launched in March. The platform development have been mostly&nbsp;<a href="http://madebyhiro.com/en/">made by&nbsp;Hiro</a>, a small design and development agency that provides web and mobile applications as well as custom media solutions.</p>
+<p><strong>At IBC 2014</strong>, we are going to show more, including HEVC live, DASH-IF and DVB-DASH recommendations, and some TV support from LG and tablet support from Qualcomm. &nbsp;More information at&nbsp;<a href="http://blog.eltrovemo.com/1218/mpeg-dash-ecosystem-status/">https://tech.ebu.ch/news/ebu-ibc-2014-whats-happening-23jul14</a>.</p>
+<p>Source code:</p>
+<ul>
+<li>live: <a href="https://github.com/ebu/test-engine-live-tools">https://github.com/ebu/test-engine-live-tools</a></li>
+<li>onDemand: <a href="https://github.com/ebu/test-engine-ondemand">https://github.com/ebu/test-engine-ondemand</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong><a id="mp4box" style="color: #fff;"></a>MP4Box</strong></p>
+<p>Documentation:&nbsp;<a href="http://www.gpac.io/mp4box/">www.gpac.io/mp4box/</a>&nbsp;and&nbsp;<a href="http://www.gpac.io/mp4box/dash/">www.gpac.io/mp4box/dash/</a></p>
+<p><em>On Demand processing (all profiles)</em></p>
+<table border="1" width="1024" cellspacing="0" cellpadding="0">
+<colgroup>
+<col width="384" />
+<col width="640" /> </colgroup>
+<tbody>
+<tr>
+<td width="384" height="19"><strong>Description</strong></td>
+<td width="640"><strong>MP4Box command-line</strong></td>
+</tr>
+<tr>
+<td height="19"><em>Single Video</em></td>
+<td></td>
+</tr>
+<tr>
+<td height="19">&nbsp; BaseURL@byteRange</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:onDemand -bs-switching no</td>
+</tr>
+<tr>
+<td height="19">&nbsp; BaseURL@byteRange +sidx</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:onDemand -bs-switching no -subsegs-per-sidx 0</td>
+</tr>
+<tr>
+<td height="19">&nbsp; number-based templates and @duration</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:live -bs-switching no -url-template -segment-name seg_$Number$</td>
+</tr>
+<tr>
+<td height="19">&nbsp; time-based templates and SegmentTimeline</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:live -bs-switching no -url-template -segment-timeline -segment-name seg_$Time$</td>
+</tr>
+<tr>
+<td height="19"><em>Multiple Audios, Videos, and bitrate</em>s</td>
+<td></td>
+</tr>
+<tr>
+<td height="19">&nbsp; BaseURL@byteRange</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:onDemand -bs-switching no</td>
+</tr>
+<tr>
+<td height="19">&nbsp; BaseURL@byteRange +sidx</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:onDemand -bs-switching no -subsegs-per-sidx 0</td>
+</tr>
+<tr>
+<td height="19">&nbsp; number-based templates and @duration: $RepresentationID$</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:live -bs-switching no -url-template -segment-name seg_$RepresentationID$_$Number$</td>
+</tr>
+<tr>
+<td height="19">&nbsp; number-based templates and @duration: $Bandwidth$</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:live -bs-switching no -url-template -segment-name seg_$Bandwidth$_$Number$</td>
+</tr>
+<tr>
+<td height="19">&nbsp; time-based templates and SegmentTimeline</td>
+<td>-dash 10000 -rap -dash-profile dashavc264:live -bs-switching no -url-template -segment-timeline -segment-name seg_$Bandwidth$_$Time$</td>
+</tr>
+</tbody>
+</table>
+<p><em>Live processing</em></p>
+<p>This relies on MP4Box live capabilities. MP4Box can take an existing file and DASH it realtime until it is entirely processed using the "-dash-live" option. It can also process existing chucks and return immediately. In this case it relies on a context file to resume for the next data chuck. The option is called "-dash-ctx" and is ideal if your data is already segmented (HLS for example as we use it in EBU.io). <a href="http://www.gpac.io/mp4box/dash/">Learn more</a>.</p>
+<blockquote><p><strong>MP4Box -dash-ctx dash-live.txt -dash 10000 -rap -no-frags-default -bs-switching no -mpd-refresh 10 -min-buffer 30000 -url-template -time-shift 1800 -segment-name 'live_$RepresentationID$_' -out live -dynamic rep1.mp4 rep2.mp4 ... repn.mp4</strong></p></blockquote>
+<p>&nbsp;</p>
+<p><strong><a id="dashcast" style="color: #fff;"></a>DashCast</strong></p>
+<p>Documentation:&nbsp;<a href="http://www.gpac.io/dashcast/">www.gpac.io/dashcast/</a></p>
+<p>DashCast output is natively compatible with the DASH-IF profile. It is suitable for any MPEG-DASH application. The support against the dash.js player is maintained by <a href="https://sourceforge.net/p/gpac/discussion/287547/thread/00c66561/">the GPAC community</a>.</p>
+<p>On Unix, launch the current command-line to capture your screen and send it to the dash.js player:</p>
+<blockquote><p><strong>DashCast -vf x11grab -vres 1024x768 -vfr 25 -v :0.0 -seg-dur 2000 -live -npts -time-shift 10 -mpd-refresh 2</strong></p></blockquote>
+<p>On Windows:</p>
+<blockquote><p><strong>DashCast -vf dshow -v video="screen-capture-recorder"&nbsp;-vres 1024x768 -vfr 25 -v :0.0 -seg-dur 2000 -live -npts -time-shift 10 -mpd-refresh 2</strong></p></blockquote>
+<p>Please note that GPAC Licensing has a more modular version of DashCast with some professional support. Please&nbsp;<a title="Contact" href="https://www.gpac-licensing.com/contact/">contact us</a>&nbsp;for more information.</p>
+<p>&nbsp;</p>
+<p><strong><a id="drm" style="color: #fff;"></a>Current limitations</strong></p>
+<ul>
+<li>No checks on the Elementary Streams. You may provide some incorrect codecs of profiles without receiving any warning from MP4Box.</li>
+<li>"segment timeline" with multiple non-aligned representations is currently broken. Fixing this will require either time or &nbsp;some funding from a partner. We need to change the way we represent data in the GPAC DASH segmenter (which was made while DASH was just a draft, see this excellent <a href="http://blog.eltrovemo.com/dash_timeline/">MPEG-DASH timeline</a> by Nicolas Weil). Feel free to <a title="Contact" href="https://www.gpac-licensing.com/contact/">propose your help</a>.</li>
+</ul>
+<p><strong>DRMs&nbsp;</strong>are supported using MPEG Common Encryption (CENC). To know more about the GPAC CENC support, I can suggest you 3 actions:</p>
+<ol>
+<li>Read the GPAC CENC&nbsp;<a href="http://www.gpac.io/mp4box/encryption/common-encryption/">documentation</a>.</li>
+<li>Subscribe to the <a href="http://gpac-licensing.com/newsletter">GPAC Licensing mailing-list</a> to have access to a video explaining how it works.</li>
+<li>Wait for a next blog article which will explain how to be compatible with Microsoft PlayReady, Adobe Access, maybe more.</li>
+</ol>
+<p>&nbsp;</p>
+<p><strong><a id="support" style="color: #fff;"></a>Support</strong></p>
+<p>If you have any questions or remarks, please feel free to contact us:</p>
+<ul>
+<li>DASH-IF profiles specific, please use the DASH-IF Mailing-List.</li>
+<li>For dash.js matters, please use the <a href="https://groups.google.com/forum/#!forum/dashjs">dash.js google group</a>.</li>
+<li>If you do or plan to have some professional support on GPAC, <a title="Contact" href="https://www.gpac-licensing.com/contact/">click here</a>.</li>
+<li>For all the other requests, please use the <a href="http://gpac.wp.mines-telecom.fr/2011/10/01/please-use-forums/">GPAC public forums</a>.</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong><a id="links" style="color: #fff;"></a>Links</strong></p>
+<ul>
+<li><a href="http://dashif.org">DASH-IF</a></li>
+<li><a href="http://ebu.io">EBU.io platform</a></li>
+<li><a href="http://gpac.io">GPAC open-source</a></li>
+<li><a href="https://www.gpac-licensing.com">GPAC Licensing</a></li>
+</ul>

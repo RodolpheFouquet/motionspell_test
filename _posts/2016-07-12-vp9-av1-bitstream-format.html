@@ -1,0 +1,226 @@
+---
+layout: post
+status: publish
+published: true
+title: 'A view on VP9 and AV1 part 1: specifications'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 2069
+wordpress_url: http://www.gpac-licensing.com/?p=2069
+date: '2016-07-12 09:39:10 +0200'
+date_gmt: '2016-07-12 09:39:10 +0200'
+categories:
+- Technology
+- Experts Opinions
+tags: []
+comments:
+- id: 1278
+  author: Kieran Kunhya
+  author_email: kierank@obe.tv
+  author_url: http://www.obe.tv
+  date: '2016-07-13 19:02:13 +0200'
+  date_gmt: '2016-07-13 19:02:13 +0200'
+  content: "<cite>There is no anti-emulation as required in AVC/HEVC. This simplifies
+    the decoding process but at the cost of not being able to transport VP9 or AV1
+    on MPEG-2 TS.</cite>\r\n\r\nIf they just mandated one frame per PES they could
+    get away with this. Or they could just accept the chance of emulation which is
+    only really an issue with resilience during loss of MPEGTS packets. \r\n\r\nKieran"
+- id: 1279
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-07-14 13:25:29 +0200'
+  date_gmt: '2016-07-14 13:25:29 +0200'
+  content: "Hi Kieran,\r\n\r\nThanks for your input. You are right, those are choices
+    that need to be made.\r\n\r\nAbout anti-emulation in HEVC, I found something really
+    ugly in the slice_segment_header while writing this article. It was a bit out
+    of scope here, but I'm sure that you and a few readers will understand the consequences
+    of this poor choice (only one in the whole standard):\r\n\r\n<blockquote>entry_point_offset_minus1[i]
+    plus 1 specifies the i-th entry point offset in bytes [...]. When present, emulation
+    prevention bytes that appear in the slice segment data portion of the coded slice
+    segment NAL unit are counted as part of the slice segment data for purposes of
+    subset identification.</blockquote>\r\n\r\nRomain"
+- id: 1286
+  author: Gary Hughes
+  author_email: ghughes1138@gmail.com
+  author_url: ''
+  date: '2016-07-20 18:44:50 +0200'
+  date_gmt: '2016-07-20 18:44:50 +0200'
+  content: "The Superframe seems very similar to the packed bitstream idea that is
+    sometimes used\r\nto carry B pictures in AVI files. Since AVI files do not support
+    picture reordering (no concept\r\nof Decode TimeStamps), the B picture is packed
+    in with another picture and a subsequent \r\nempty picture is used to trigger
+    the presentation of the B picture. \r\n\r\nIf you google \"Divx packed bitstream\"
+    you should find more details. \r\n\r\ngary"
+- id: 1287
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-07-20 19:51:47 +0200'
+  date_gmt: '2016-07-20 19:51:47 +0200'
+  content: "Hi Gary,\r\n\r\nThanks for your message. Two reviewers of the article
+    made the same remark. So I'm glad you wrote about it in the comments :)\r\n\r\nThere
+    are two reasons why I chose not to mention it:\r\n1) I wanted to keep the article
+    short: the first version was way longer so I had to cut large parts (and also
+    split the article into two parts).\r\n2) Although the technical mechanism is the
+    same, the motivation was different (as you rightfully mention): AVI made it because
+    PTS reordering was not allowed. But Google did it for another reason and I still
+    think it is to walk-around a B-frame patent.\r\n\r\nThe mechanism plus the signalling
+    at the end of the frame was weird-enough for me to consider Superframes error-prone
+    (from a bitstream format perspective). Beyond what I described, a decoder implementer
+    has to parse the content backward (i.e. from the end if the frame) with a possibility
+    of bitstream ambiguity avoided by adding a fake final byte ; from the VP9 bitstream
+    specification:\r\n<blockquote>\r\nit is a requirement of bitstream conformance
+    that the final byte of a coded frame must not contain a superframe_marker.\r\n</blockquote>\r\n\r\nI
+    hope AV1 will make this clearer,\r\n\r\nRomain"
+- id: 1288
+  author: 'A view on VP9 and AV1 part 1: specifications - ...'
+  author_email: ''
+  author_url: http://www.scoop.it/t/video-everywhere-with-a-headache/p/4066637053/2016/07/21/a-view-on-vp9-and-av1-part-1-specifications-gpac-licensing
+  date: '2016-07-21 09:27:30 +0200'
+  date_gmt: '2016-07-21 09:27:30 +0200'
+  content: "[&#8230;] A view on VP9 and AV1 part 1: specifications Introduction The
+    success of a video coding standard depends on many factors. Many articles try
+    to benchmark the performance of codec implementations or make comments about the
+    ecosystem of codecs. But I &hellip; Continue reading &rarr;&nbsp; [&#8230;]"
+- id: 1289
+  author: guest
+  author_email: elenorf1@o2.pl
+  author_url: ''
+  date: '2016-07-23 17:10:22 +0200'
+  date_gmt: '2016-07-23 17:10:22 +0200'
+  content: "\"The arithmetic coding is way simpler than AVC/HEVC. The state of the
+    arithmetic coder can be duplicated for a group of frames.\"\r\nAV1 is no longer
+    using arithmetic coding, but this new ANS coding (asymmetric numeral systems):\r\nhttps://aomedia.googlesource.com/aom/+/30abc082119d2c76aa8f009228c17e173e6bd85b/aom_dsp/"
+- id: 1290
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-07-23 17:42:15 +0200'
+  date_gmt: '2016-07-23 17:42:15 +0200'
+  content: Thank you for the information!
+- id: 1292
+  author: David Ronca
+  author_email: jonathannah@hotmail.com
+  author_url: https://www.linkedin.com/in/davidronca
+  date: '2016-07-25 05:51:25 +0200'
+  date_gmt: '2016-07-25 05:51:25 +0200'
+  content: It seems a little premature to talk about the lack of NALU structure or
+    emulation later in AV1 as a given, since the codec spec is not complete.  VP9
+    cannot be extended due to the lack of a system-level syntax.  For example, you
+    cannot carry HDR mastering metadata in the bitstream.  This was (IMO) a gross
+    oversight, and the same mistake cannot be made with AV1.  That is, AV1 must have
+    a bitstream structure that supports extensiblity and lossy transmission (i.e.
+    M2TS).  This means AV1 needs a system-level syntax including start codes and thus
+    emulation-prevention.
+- id: 1293
+  author: Alan S. Davis
+  author_email: bouroboure@yahoo.fr
+  author_url: ''
+  date: '2016-07-25 09:44:42 +0200'
+  date_gmt: '2016-07-25 09:44:42 +0200'
+  content: Thank you very much for your work. When do you plan to release part 2?
+- id: 1294
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-07-25 09:47:16 +0200'
+  date_gmt: '2016-07-25 09:47:16 +0200'
+  content: I plan to release part 2 at mid or end of August. The article is almost
+    here, just a few editorial changes to be done.
+- id: 1295
+  author: Romain Bouqueau
+  author_email: romain.bouqueau.pro@gmail.com
+  author_url: ''
+  date: '2016-07-25 10:28:43 +0200'
+  date_gmt: '2016-07-25 10:28:43 +0200'
+  content: "Hi David,\r\n\r\nThanks for your input.\r\n\r\nAgreed: since Superframes
+    parse backward, VP9/AV1 now needs a more sophisticated mechanism to be extended.
+    About Emulation, please read the message from Kieran Kunhya above and my reply.\r\n\r\nDoing
+    it right the first time is very difficult. Some of the issues raised about VP9
+    (and the current AV1 codebase) in this article are quite important. People raised
+    concerns about MPEG being too slow to standardize, but AVC and HEVC are almost
+    bug-free despite their complexity (beside a few drawbacks I'll talk about in the
+    next article). The first version of AV1 is coming soon (<a href=\"https://en.wikipedia.org/wiki/Alliance_for_Open_Media\"
+    rel=\"nofollow\">Q1 2017</a>) and I hope that's enough time to make it right.\r\n\r\nRomain"
+- id: 1454
+  author: 'A view on VP9 and AV1 part 1: specifications - ...'
+  author_email: ''
+  author_url: http://www.scoop.it/t/ultra-high-definition-television-uhdtv/p/4072695044/2016/12/11/a-view-on-vp9-and-av1-part-1-specifications-gpac-licensing
+  date: '2016-12-11 15:50:01 +0100'
+  date_gmt: '2016-12-11 15:50:01 +0100'
+  content: "[&#8230;] A view on VP9 and AV1 part 1: specifications Introduction The
+    success of a video coding standard depends on many factors. Many articles try
+    to benchmark the performance of codec implementations or make comments about the
+    ecosystem of codecs.&nbsp; [&#8230;]"
+- id: 1504
+  author: D Bhat
+  author_email: Dinkar.Bhat@arris.com
+  author_url: ''
+  date: '2017-03-03 14:51:10 +0100'
+  date_gmt: '2017-03-03 14:51:10 +0100'
+  content: Would it possible for someone to kindly explain why anti-emulation in VP9
+    prevents it from being encapsulate din MPEG TS? It seems that VP9 frames can be
+    encapsulated in PES packets though?
+- id: 1577
+  author: 'leandromoreira/digital_video_introduction: A hands-on introduction to video
+    technology: image, video, codec (av1, h264, h265) and more (ffmpeg encoding).
+    | Artificia Intelligence'
+  author_email: ''
+  author_url: http://www.aboromedia.com/ai/2017/06/03/leandromoreiradigital_video_introduction-a-hands-on-introduction-to-video-technology-image-video-codec-av1-h264-h265-and-more-ffmpeg-encoding/
+  date: '2017-06-03 12:43:35 +0200'
+  date_gmt: '2017-06-03 12:43:35 +0200'
+  content: "[&#8230;] others bitstreams like the VP9 bitstream, H265 (HEVC) or even
+    our new best friend AV1 bitstream, do they all look similar? No, but once you
+    learned one you can easily get the [&#8230;]"
+- id: 6205
+  author: leandromoreira/digital_video_introduction - NSO News
+  author_email: ''
+  author_url: https://nsonews.com/leandromoreira-digital_video_introduction/
+  date: '2019-11-23 05:02:38 +0100'
+  date_gmt: '2019-11-23 05:02:38 +0100'
+  content: "[&#8230;] others bitstreams like the VP9 bitstream, H.265 (HEVC) or even
+    our new best friend AV1 bitstream, do they all look similar? No, but once you
+    learned one you can easily get the [&#8230;]"
+- id: 6209
+  author: 'leandromoreira/digital_video_introduction A hands-on introduction to video
+    technology: image, video, codec (av1, vp9, h265) and more (ffmpeg encoding). &#8211;
+    GitHub热门精选'
+  author_email: ''
+  author_url: https://www.xgithub.com/2017/01/28/leandromoreira-digital_video_introduction-a-hands-on-introduction-to-video-technology-image-video-codec-av1-vp9-h265-and-more-ffmpeg-encoding/
+  date: '2019-11-25 09:32:31 +0100'
+  date_gmt: '2019-11-25 09:32:31 +0100'
+  content: "[&#8230;] others bitstreams like the VP9 bitstream, H.265 (HEVC) or even
+    our new best friend AV1 bitstream, do they all look similar? No, but once you
+    learned one you can easily get the [&#8230;]"
+---
+<h1>A view on VP9 and AV1 part 1: specifications</h1>
+<p><strong>Introduction</strong></p>
+<p>The success of a video coding standard depends on many factors.&nbsp;Many articles try to benchmark the performance of codec implementations or make comments about the ecosystem of codecs. But I have not seen any article&nbsp;about the <a href="https://www.gpac-licensing.com/2013/10/14/standard-cover-mpeg-dash-case-study/">standardization</a> process or the bitstream format.&nbsp;While the video quality is key, I&nbsp;believe the bitstream format is&nbsp;important too, but is probably less accessible or easy to communicate about.</p>
+<p>This is a two-part analysis. <a href=https://www.gpac-licensing.com/2016/07/12/vp9-av1-bitstream-format/>Part 1 (this article)</a> compares the HEVC and VP9/AV1 codecs in the light of their bitstream formats. <a href="https://www.gpac-licensing.com/2016/08/29/a-view-on-vp9-and-av1-part-2-important-considerations/">Part 2</a> will look at some other important considerations.</p>
+<p><strong>Bitstream format comparison with HEVC</strong></p>
+<p>The VP9 bitstream format specification was frozen in June 2013. But it seems that some features (e.g. Levels) were added afterwards.&nbsp;AV1 derives from VP9 with most of the additions being made by the Google teams based on the developments of VP10.&nbsp;AV1 still moves a lot, but AV1 high-level structures likely won't move. I expect the authors to add low level tools such as transformation types (ADCT, ADST, ...) which are inferred in HEVC but can be custom in AV1; and also tools from the other codec makers (Daala from Mozilla and Thor from Cisco).</p>
+<p>VP9 and AV1 bitstreams are quite different from AVC/HEVC in several ways:</p>
+<ul>
+<li>In VP9/AV1, each frame is complete. There is no such thing as Slices, only Tiles. As a consequence, there is no high-level abstraction like NALUs for HEVC (and AVC and derivatives) and frame fragmentation over RTP is simpler but less robust to packet loss.</li>
+<li>The state of a VP9/AV1 encoder or decoder can be represented by the set of reference frames plus the arithmetic context. There is no need like in AVC/HEVC to maintain which parameter set&nbsp;(SPS, PPS, ...) is active.</li>
+<li>In VP9/AV1, a "Frame parallel decoding mode" allows to parse frames in parallel.</li>
+<li>The arithmetic coding is way simpler than AVC/HEVC. The state of the arithmetic coder can be duplicated for a group of frames.</li>
+<li>Reference Picture Set (RPS) is simpler in VP9.</li>
+<li>There is no anti-emulation as required in AVC/HEVC. This simplifies the decoding process but at the cost of not being able to transport VP9 or AV1 on MPEG-2 TS.</li>
+<li>The pixel reconstruction phase of VP9 requires more hardware surface than HEVC,&nbsp;because VP9 uses numbers with higher precision requiring more <a href="https://en.wikipedia.org/wiki/Adder_(electronics)">adders</a>.&nbsp;And the transform coefficients are ordered in a less predicable way in VP9 (which will result in more hardware surface).</li>
+<li>There is no such thing as VP9 or AV1 File Format (AVC/HEVC has raw, Annex B, and canonical/MP4). One needs to use the <a href="https://wiki.multimedia.cx/index.php?title=IVF">IVF File Format</a> or <a href="https://www.webmproject.org">WebM</a>.</li>
+</ul>
+<p>In my view,&nbsp;the VP9 specification shines by its simplicity, but there is one concept that seems weird to me (although&nbsp;I did not follow all the codec history): Superframes. The Superframe concept seems to be a workaround on a B-frame patent. A VP9 encoder first produces&nbsp;a frame that won't be displayed now, packed with a frame that is displayed now, and the encoder produces an almost empty frame (skip) that only references the previously non-displayed frame. What is also weird is that&nbsp;the header of the Superframe is at the end of the frame (<a href="https://bugs.chromium.org/p/aomedia/issues/detail?id=22&q=">bug filed for AV1</a>).&nbsp;A possible explanation is that Superframes were introduced when some decoders were already out and that was the way to avoid breaking those decoders.</p>
+<p><strong>Encoding considerations</strong></p>
+<p>VP9 and AV1 have one strong problem: the encoding process may lead to integer overflows and these overflows cannot be predicted by&nbsp;the encoder before reconstructing the local coding block. Hence, in the worst case, if the overflow happens late in the frame encoding, the encoder might need to re-encode the entire&nbsp;frame. This may be ok for offline encoding, where multipass is used anyway, but this is&nbsp;unacceptable for real-time encoding.&nbsp;More specifically these overflows may occur&nbsp;when encoding residuals. Practically you may overflow at all intermediate values so you need&nbsp;to check them all. If a check fails, you have to re-encode&nbsp;with another quantizer otherwise the&nbsp;18 bits intermediate registers used for quantizer at the decoder will overflow. So, by making life simple to decoders with 18 bits intermediate registers, VP9 and current AV1&nbsp;make encoders life much more difficult because some possible combinations are de-facto impossible to get conformant.</p>
+<p>Note that there is <a href="https://bugs.chromium.org/p/webm/issues/detail?id=642">one bug tagged as 'won't fix' in VP9</a>. The funny fact is that the issue was present in AVC but solved in HEVC (so the VP9 issue was likely imported from AVC).</p>
+<p><strong>Conclusion</strong></p>
+<p>This part 1 focused on the VP9 and AV1 bitstream specifications. We like VP9 and AV1 for the simplicity of the design and bitstream format.  But at the moment these codecs are not suitable to compete with HEVC for live for bitstream reasons. VP9 was frozen in 2013 but AV1 is still a few months away from being bitstream frozen (planned in Q1 2017). We hope AV1 contributors will keep on the effort and provide us with a strong competitor for HEVC.</p>
+<p>Stay tuned for <a href="https://www.gpac-licensing.com/2016/08/29/a-view-on-vp9-and-av1-part-2-important-considerations/">Part 2</a> where I'll talk about considerations such as the factors of success of a codec, patents, standardization, and deployment considerations.</p>
+<p>And of course feel free to share and comment this article :)</p>

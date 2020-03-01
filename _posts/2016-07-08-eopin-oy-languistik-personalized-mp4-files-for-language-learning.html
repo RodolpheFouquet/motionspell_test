@@ -1,0 +1,44 @@
+---
+layout: post
+status: publish
+published: true
+title: 'Eopin Oy Languistik: Personalized MP4 Files for Language Learning'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 2112
+wordpress_url: http://www.gpac-licensing.com/?p=2112
+date: '2016-07-08 10:46:55 +0200'
+date_gmt: '2016-07-08 10:46:55 +0200'
+categories:
+- Invited article
+tags: []
+comments: []
+---
+<h1>Eopin Oy Languistik: Personalized MP4 Files for Language Learning</h1>
+<p>Almost two years ago, <a href="http://eopin.fi">Eopin Oy</a> approached <a href="https://www.gpac-licensing.com/">GPAC Licensing</a> to discuss the concept of a new language learning application called Languistik. Languistik brings several innovations to language learning, accelerating the process of learning. This summer, Eopin Oy released the first version of Languistik.</p>
+<p>One of the key ideas behind Languistik was to offer &ldquo;Accelerated Learning for Busy People&rdquo;. Eopin created an application that can build different personalized MP3 files each time a lesson is saved without requiring or including an MP3 encoder. The application includes individual pre-recorded MP3 sentences, and combines selected sentences into a single unique file on the fly when a lesson is saved. The selection is based on the user&rsquo;s progress as determined by an algorithm that Eopin developed. As the user progresses, the next iteration of the saved MP3 file includes progressive new material and excludes material that is already known by the user. The user can then listen to the personalized MP3 files on-the-go &ndash; in a car, at a fitness studio or walking the dog. After they have mastered an MP3 file, they can save another iteration which will automatically include new material.</p>
+<p>Eopin contacted GPAC Licensing in order to find out whether it would be possible to extend this idea to produce highly compressed MP4 video files, too. These files would include not only audio, but also images to reinforce memorization of the new language, and subtitles to indicate the correct spelling. After some research, we determined that it is indeed possible.</p>
+<p>Eopin&rsquo;s implementation of MP4 support consists of the following steps: Eopin authors (pre-records) audio and video files, representing individual sentences. We author MP3 audio files at a bit rate of 128 kbps. In parallel with the MP3 files, we author MP4 files that include an image, AAC audio at 96 kbps, and subtitling. The MP4 files are actually smaller in size than the corresponding MP3 files. The subjective audio quality remains the same.</p>
+<p>The application must be able to combine (concatenate) these MP4 fragments on the fly when the lesson is saved, and this is much more complicated for MP4 than it is for MP3. When the user specifies that he wants to save his or her next video, we basically do the following:</p>
+<pre>MP4Box -cat F16078.mp4 -cat F8818.mp4 -cat F20187.mp4 &hellip; -cat F857.mp4 YOUR_LESSON.mp4</pre>
+<p>Typically, there are hundreds of individual sentences in one personalized twenty to forty-minute lesson. In order to gain maximum speed, we need to build a command line to combine these which is as long as the underlying operating system supports.</p>
+<p>In addition to the above, some beta testers requested chapter markings in the videos, so we decided to support this. There does not seem to be a universally accepted MP4 industry standard for this, but GPAC does support a proprietary standard, the Nero format.<br />
+Chapter markers are created by writing a UTF-8 format text file named &ldquo;chapter.txt&rdquo; which indicates the chapter names and start times, for example:</p>
+<pre>
+ CHAPTER1=00:00:05:000
+ CHAPTER1NAME=Chapter 11: How much is this?
+ CHAPTER2=00:12:39:000
+ CHAPTER2NAME=Chapter 12: Dialogues
+ CHAPTER3=00:28:04:000
+ CHAPTER3NAME=Chapter 13: I&rsquo;m from Canada, but I live in Germany.</pre>
+<p>In this example, there are three chapter marks. Logical Chapter 2, for example, is called &ldquo;Chapter 12: Dialogues&rdquo;, and it starts at 12 minutes, 39 seconds.<br />
+By the way, the &ldquo;-dref&rdquo; switch of mp4box is very handy when adding the optional chapter marks as a separate post-processing step:</p>
+<pre>MP4Box -dref -chap chapter.txt YOUR_LESSON.mp4</pre>
+<p>GPAC Licensing supported Languistik development in various ways, including technical advice and advice on licensing and the EULA. We are deeply impressed by the knowledge of this company concerning modern video technologies.</p>
+<p>You can learn more about Languistik at <a href="http://eopin.fi">http://eopin.fi</a> and <a href="https://eopin.fi/Info/LC Edinburgh 2016 PH.pptx">this presentation</a>. The website includes a download link for a demo version of our application. There are brief samples of some of our courses available for you to test. Currently, there are Windows and MAC OS X versions available. In the summer of 2016, we are offering a 20% discount coupon for any of our language learning courses to anyone who downloads the demo.</p>
+<p>To see <a href="http://gpac.io">GPAC</a> in action, install the app, and use its &ldquo;Open&rdquo; page to install the demo course. You can use the &ldquo;Play&rdquo; page to work with the content. Then go to the &ldquo;Save&rdquo; page, and save your first MP3/MP4 file(s). If you select MP4, when you see the save progress indicator stop for a few seconds, that&rsquo;s where GPAC is performing its many concatenation tasks, and finally, creating the chapter markings.</p>

@@ -1,0 +1,158 @@
+---
+layout: post
+status: publish
+published: true
+title: Three sources of latency
+author:
+  display_name: Sebastien Alaiwan
+  login: alaiwans
+  email: sebastien.alaiwan@gpac-licensing.com
+  url: ''
+author_login: alaiwans
+author_email: sebastien.alaiwan@gpac-licensing.com
+wordpress_id: 2573
+wordpress_url: https://www.gpac-licensing.com/?p=2573
+date: '2019-06-17 03:11:29 +0200'
+date_gmt: '2019-06-17 03:11:29 +0200'
+categories:
+- Experts Opinions
+tags: []
+comments:
+- id: 5739
+  author: Our journey in low latency OTT (DASH, HLS) - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2019/03/29/our-journey-in-low-latency-ott/
+  date: '2019-06-19 12:15:52 +0200'
+  date_gmt: '2019-06-19 12:15:52 +0200'
+  content: "[&#8230;] PS 2019/06/19: following remarks on social networks we have
+    added a detailed dedicated article about the technical sources of latency. [&#8230;]"
+---
+<p><!-- wp:heading --></p>
+<h2>Three sources of latency</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:heading --></p>
+<h2>What is latency?</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Latency is the time elapsed between two events, which in a perfect world, would be simultaneous.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In a live video streaming scenario, the latency is typically the time elapsed between the capture of a video frame, and this frame being displayed on the end-user terminal.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>We all have a feeling about what latency is:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Musicians playing with digital audio workstations are used to the delay between the pressing of a key and the sound coming out of from the  speakers. In this case, 200ms latency is considered very high, and 10ms latency is considered acceptable.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Watchers of the soccer world cup know they don't all experience the same delay between the moment of goal is scored on the field, the moment they hear their neighboors scream with joy, and the moment they finally see the actual action on their screen.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In live TV streaming, a latency of 1-2 seconds is considered OK. OTT streaming like HLS or MPEG-DASH typically introduce 10s latency, or more.<br>This isn't generally considered an issue, as it has most of the time no impact<br>on the viewer's experience (as there's no interaction between the user and the source). A latency of some video frames ( ~200 ms) is considered pretty good. Some video applications, like WiGig, require very low video latencies (~2ms), which is less than the duration of one video frame.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In general, we prefer latency to be as small as possible.<br>What is causing this latency, and what is causing it to go up or down?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>In live video streaming, there are three sources of latency, which indirectly determine the overall resulting latency.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Processing latency</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Also known as "the computers are not fast enough", processing latency is the time spent waiting for any processor to finish its work. The longer the task, the higher the latency. This kind of latency goes to zero when the processing power (CPU frequency, memory bandwidth, etc.) goes to infinity.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>An infinitly fast computer would introduce zero processing latency. In the absence of such a computer, the software engineer can reduce this latency by optimizing the code so there's less processing work to do.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Processing latency generally isn't a problem in live video streaming setups:</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Video encoders and decoders are designed to be fast enough to cope with at least 25 frames per second. Given that video compression requires encoders/decoders to mostly operate sequentially, this implies that the average frame processing time must be less than 40 milliseconds.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Communication latency</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Also known as "the packets are not travelling fast enough" (or even "the distance is too big"), communication latency is about signal propagation over distances. </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Electrical or optical signals going through wires take some time to go from<br>one point to another (the speed of light being the ultimate limit). This is partly what you're measuring when you ping google.com. Technically, a big part of the ping value comes from the processing latency from routers between you and the server.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The over-the-top live streaming engineer generally has zero control on this kind of latency. We generally consider it as a black box ensuring mostly-reliable transmission between two endpoints.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Communication latency is often confused with data throughput rate, also known as "bandwidth".  Depending on the transmission protocol, a latency might indeed play an important role in the resulting throughput.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading --></p>
+<h2>Algorithmic latency</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Algorithmic latency is at the same time the most difficult to understand, and the most interesting. It's generally the biggest cause of overall latency, and also, the one we have the most control over. It's the direct result of our arbitrary design choices.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The simplest example of algorithmic latency is fixed-size block processing.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Fixed-size block processing</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Suppose we have a live stream of uncompressed audio samples at 48kHz.<br>Each second, 48000 new samples are available on our input.  More precisely: let's suppose that our stream of sample is <em>continous</em>, which means that every 1/48000 th of a second, one new audio sample arrives on our input. This difference is very important.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now, at first, suppose we're just passing the samples through to our output, with no processing at all.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Each time a new sample arrives at our input, it instantaneously becomes<br>available on our output. So we're introducing exactly zero latency here.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now, we want to reduce the audio volume, by multipliying all our samples by 0.5 : each time a new sample arrives at our input, we multiply it by 0.5, and then push it to our output. The multiplication takes some time, so now we're introducing processing latency: if we can do the multiplication faster, then we can reduce this processing latency. If we had an infinitely fast CPU, the multiplication would be instantaneous, and we would be back to introducing zero latency.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Now, let's complicate things a little bit. We don't have such a CPU, however, we have a SIMD unit that can do 4 multiplications simultaneously. Can we reduce latency this way?</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>The answer is no: we have to batch our input samples by groups of 4 before sending them to our SIMD unit. This means that we have to <em>wait</em> for samples #1, #2, #3, #4 to arrive on our input before launching the multiplication.<br>And this is where the algorithmic latency occurs: because now, we have to<br>wait for sample #4 before multiplying sample #1. And the wait duration has nothing to do with our SIMD unit speed. It's related to the speed of the <em>input</em>, i.e the real time, which of course we can't speed up!</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Consumer gear like webcams typically output complete video frames in one single buffer. This means that the capture of lower-half of a picture has to be complete before sending the upper-half of this same picture. This is not the case with, for example, analog video, or WiGig (this is a very special case, called "sub-frame latency").</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:heading {"level":3} --></p>
+<h3>Sliding windows</h3>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>The situation gets worse when the video is compressed, for several reasons, all related to algorithmic latency. To increase video quality, video compression standards try to benefit from the redundancy between successive video frames. This comes at a cost, because now we might need to wait for some video frames to arrive on our input (or to be encoded) before starting to encode some other frames.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:list --></p>
+<ul>
+<li>a video encoder might be able to better compress one frame if it can analyze, for example, the next 10 frames. In practice, such an encoder would maintain a sliding window of 10 frames. This technique is called "lookahead", and allows smart rate control algorithms to achieve better quality.<br>The cost is the introduction of a 10-frame latency, and also, higher memory requirements for the encoder, which has to store 10 uncompressed frames.</li>
+<li>most video compression standards benefit from compressing the frames in an order which is slightly different from the "real" order.<br>This typically introduces a latency of 2 or 3 frames, depending on the encoding settings.</li>
+</ul>
+<p><!-- /wp:list --></p>
+<p><!-- wp:heading --></p>
+<h2>Conclusion</h2>
+<p><!-- /wp:heading --></p>
+<p><!-- wp:paragraph --></p>
+<p>Keeping a algorithmic latency under control first requires identifying it as such. It requires spotting the algorithmic data dependencies introduced by the implementation, and how they can be reduced, or eliminated.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>Fixed-size block processing is a well-known latency-introducing pattern,<br>which requires keeping a critical eye on the live duration of those chunks.<br>This is where most OTT streaming protocols hit their limits: for overhead reasons, the chunk duration cannot realistically be made less than one second, putting a tough lower limit on the overall latency.</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>MPEG-DASH mitigates the issue by making the difference between segments (the HTTP resources corresponding to the GET requests) and fragments (independently processable units inside those HTTP resources, whose duration typically corresponding). </p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:paragraph --></p>
+<p>However, it requires some sophisticated special handling in both player and server code (which must be able to serve incomplete HTTP resources, and to pause the transfer in case the resource isn't produced fast enough).</p>
+<p><!-- /wp:paragraph --></p>
+<p><!-- wp:gallery {"ids":[2598]} --></p>
+<ul class="wp-block-gallery columns-1 is-cropped">
+<li class="blocks-gallery-item">
+<figure><img src="https://www.gpac-licensing.com/wp-content/uploads/2019/06/Stock-9697656.jpg" alt="" data-id="2598" data-link="https://www.gpac-licensing.com/?attachment_id=2598#main" class="wp-image-2598"/><br />
+<figcaption>Three sources of latency</figcaption>
+</figure>
+</li>
+</ul>
+<p><!-- /wp:gallery --></p>

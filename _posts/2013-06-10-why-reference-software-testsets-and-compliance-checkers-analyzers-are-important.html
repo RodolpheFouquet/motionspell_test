@@ -1,0 +1,50 @@
+---
+layout: post
+status: publish
+published: true
+title: 'HbbTV: reference software, test-sets, and compliance checkers are important'
+author:
+  display_name: Romain Bouqueau
+  login: rbouqueau
+  email: romain.bouqueau.pro@gmail.com
+  url: ''
+author_login: rbouqueau
+author_email: romain.bouqueau.pro@gmail.com
+wordpress_id: 342
+wordpress_url: http://www.gpac-licensing.com/?p=342
+date: '2013-06-10 10:25:48 +0200'
+date_gmt: '2013-06-10 10:25:48 +0200'
+categories:
+- Experts Opinions
+tags: []
+comments:
+- id: 1076
+  author: IRT uses GPAC MP4Box to generate a wide set of streams - GPAC Licensing
+  author_email: ''
+  author_url: https://www.gpac-licensing.com/2016/02/16/irt-gpac-mp4box/
+  date: '2016-02-16 15:45:55 +0100'
+  date_gmt: '2016-02-16 15:45:55 +0100'
+  content: "[&#8230;] We encourage this kind of initiative. Interoperability can only
+    be achieved with test content and appropriate tools. In 2013&nbsp;we wrote an
+    article about HbbTV, test streams and conformance tools. [&#8230;]"
+---
+<h1>Reference software, test-sets, and compliance checkers are important</h1>
+<p>Before the summer, we were invited to a private 4K demonstration from several vendors. The GPAC team had provided its Osmo player for HEVC playback with DASH on Android. There were also other demonstrations.</p>
+<p>In particular we saw a booth with some HbbTV (the successor of Teletext). While it allows many neat stuff, HbbTV is mostly used to convey URL through AIT tables supported in GPAC. HbbTV is a deployment success. It's been deployed in Korea recently, in many other countries. The major TV manufacturers have integrated the specification.</p>
+<p>Someone asked us a question: how would you test HbbTV?</p>
+<p><strong>Conformance</strong></p>
+<p>The standard is a common understanding for interoperability. How can a software editor check its implementation?</p>
+<p>In the multimedia field, the standard describes the client's process. Therefore following the standard allow to make decoders or parsers (decoders which don't try to reconstruct the audio or video data they process) quite easily. The price for a decoder is 1-10$.</p>
+<p>Encoders are hard to make. They need to generate a stream that is compliant with the standard. The number of encoders sold every year is much lower. The price for an encoder is 1000-10000$.</p>
+<p>Encoders are easy to test. You need a parser which makes some checks. The checks are often written in the specification. Such a modified parser is called an analyzer.</p>
+<p>Decoders are hard to test. You need to provide a set of decodable streams. These streams try to cover the whole specification. They are called conformance streams.</p>
+<p>Such conformance streams are very convenient for hardware manufacturers: chip's production is expensive and shipped chips cannot be modified. Video standards starting at H264/AVC describes a syntax which allow decoded streams to be bit accurate (i.e. two decoders will output exactly the same image for the same input stream). Older codecs (such as MPEG2 video) had rounding issues which didn't allow such certification mechanisms.</p>
+<p><strong>Conformance streams for HbbTV</strong></p>
+<p>Let's come back to our primary subject: HbbTV. How do you test HbbTV?</p>
+<p>HbbTV is a restriction over a set of standards. So checking it would require to be able to test each of the other specifications' subsets (MPEG2-TS, MPEG-DASH, etc.). This means that as technologies are made of an assembly of other technologies, existing actors are best positioned.</p>
+<p>Another aspects is that encoders already output almost-HbbTV streams. But decoders may be more complex to upgrade. Therefore the testing should be made more intensely on the decoding side, e.g. TV manufacturers... which is the hardest side.</p>
+<p>Our conclusion was:</p>
+<ul>
+<li>Encoders testing: it is easy to test encoders by extending existing analyzers.</li>
+<li>Decoders: it is difficult to test decoders, because it would require to generate many streams. Probably by hand at first.</li>
+</ul>
